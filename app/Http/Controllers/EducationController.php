@@ -36,6 +36,7 @@ class EducationController extends Controller
     {
         $user = Auth::user();
         $request->merge(['user_id' => $user->id]);
+        $request->merge(['percentage_marks' => round(($request->obtain_marks_cgpa / $request->total_marks_cgpa * 100),2)]);
         if ($request->hasFile('degree_photo')) {
             $profile_path = $request->file('degree_photo')->store('degree-photo', 'public');
             $request->merge(['degree_photo_path' => $profile_path]);

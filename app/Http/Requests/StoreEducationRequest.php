@@ -25,9 +25,9 @@ class StoreEducationRequest extends FormRequest
             'education_level' => 'required|string',
             'board_university_name' => 'required|string|max:255',
             'passing_year' => 'required|integer|min:1900|max:' . date('Y'),
-            'cgpa_cpa_grade' => 'required|string|max:255',
+            'total_marks_cgpa' => 'required|string|max:255',
+            'obtain_marks_cgpa' => 'required|string|max:255',
             'division' => 'required|string',
-            'percentage_marks' => 'required|string|max:255',
             'major_subject' => 'required|string',
             'degree_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:4096', // Adjust the allowed file types and max size as needed.
         ];

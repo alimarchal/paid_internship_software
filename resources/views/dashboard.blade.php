@@ -1,4 +1,8 @@
 <x-app-layout>
+    @push('custom_headers')
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    @endpush
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
@@ -27,16 +31,16 @@
                                 </div>
                                 <div>
                                     <x-label for="fathers_name" value="Father's Name" :required="true"/>
-                                    <x-input id="fathers_name" name="fathers_name" class="block mt-1 w-full" type="text" value="{{ $user->fathers_name }}"/>
+                                    <x-input id="fathers_name" name="fathers_name" required class="block mt-1 w-full" type="text" value="{{ $user->fathers_name }}"/>
                                 </div>
                                 <div>
                                     <x-label for="date_of_birth" value="Date of Birth" :required="true"/>
-                                    <x-input id="date_of_birth" max="{{ \Carbon\Carbon::now()->subYear(18)->format('Y-m-d') }}" min="{{ \Carbon\Carbon::now()->subYear(25)->format('Y-m-d') }}" name="date_of_birth" class="block mt-1 w-full" type="date" value="{{ $user->date_of_birth }}"/>
+                                    <x-input id="date_of_birth" required max="2006-03-01" min="1997-03-01" name="date_of_birth" class="block mt-1 w-full" type="date" value="{{ $user->date_of_birth }}"/>
                                 </div>
 
                                 <div>
-                                    <x-label for="nationality" value="Nationality" :required="true"/>
-                                    <select id="nationality" name="nationality" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                    <x-label for="nationality" value="Nationality" required :required="true"/>
+                                    <select id="nationality" required name="nationality" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                                         <option value="">-- select one --</option>
                                         @foreach($nationals as $key)
                                             <option value="{{ $key }}" @if($user->nationality == $key) selected @else
@@ -47,7 +51,7 @@
                                 </div>
                                 <div>
                                     <x-label for="gender" value="Gender" :required="true"/>
-                                    <select id="gender" name="gender" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                    <select id="gender" name="gender" required class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                                         <option value="">Select a gender</option>
                                         <option value="Male" @if($user->gender == "Male") selected @endif>Male</option>
                                         <option value="Female" @if($user->gender == "Female") selected @endif>Female</option>
@@ -55,59 +59,67 @@
                                 </div>
                                 <div>
                                     <x-label for="cnic_number" value="CNIC Number" :required="true"/>
-                                    <x-input id="cnic_number" name="cnic_number" class="block mt-1 w-full" type="text" value="{{ $user->cnic_number }}"/>
+                                    <x-input id="cnic_number" required name="cnic_number" class="block mt-1 w-full" type="text" value="{{ $user->cnic_number }}"/>
                                 </div>
                                 <div>
                                     <x-label for="marital_status" value="Marital Status" :required="true"/>
-                                    <select id="marital_status" name="marital_status" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                    <select id="marital_status" required name="marital_status" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                                         <option value="">Select a marital status</option>
                                         <option value="Married" @if($user->marital_status == "Married") selected @endif>Married</option>
                                         <option value="Single" @if($user->marital_status == "Single") selected @endif>Single</option>
                                     </select>
                                 </div>
+
                                 <div>
                                     <x-label for="district" value="District" :required="true"/>
-                                    <select id="district" name="district" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                    <select id="district" required name="district" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                                         <option value="">Select a district</option>
+                                        <option value="Muzaffarabad" @if($user->district == "Muzaffarabad") selected @endif>Muzaffarabad</option>
+                                        <option value="Jhelum Valley" @if($user->district == "Jhelum Valley") selected @endif>Jhelum Valley</option>
+                                        <option value="Neelum" @if($user->district == "Neelum") selected @endif>Neelum</option>
+                                        <option value="Mirpur" @if($user->district == "Mirpur") selected @endif>Mirpur</option>
+                                        <option value="Bhimber" @if($user->district == "Bhimber") selected @endif>Bhimber</option>
+                                        <option value="Kotli" @if($user->district == "Kotli") selected @endif>Kotli</option>
+                                        <option value="Poonch" @if($user->district == "Poonch") selected @endif>Poonch</option>
                                         <option value="Bagh" @if($user->district == "Bagh") selected @endif>Bagh</option>
-                                        <option value="Bhimber" @if($user->district == "Bhimber") selected @endif >Bhimber</option>
-                                        <option value="Hattian Bala" @if($user->district == "Hattian Bala") selected @endif >Hattian Bala</option>
-                                        <option value="Kotli" @if($user->district == "Kotli") selected @endif >Kotli</option>
-                                        <option value="Mirpur" @if($user->district == "Mirpur") selected @endif >Mirpur</option>
-                                        <option value="Muzaffarabad" @if($user->district == "Muzaffarabad") selected @endif >Muzaffarabad</option>
-                                        <option value="Neelum" @if($user->district == "Neelum") selected @endif >Neelum</option>
-                                        <option value="Poonch" @if($user->district == "Poonch") selected @endif >Poonch</option>
-                                        <option value="Sudhanoti" @if($user->district == "Sudhanoti") selected @endif >Sudhanoti</option>
+                                        <option value="Haveli" @if($user->district == "Haveli") selected @endif>Haveli</option>
+                                        <option value="Sudhnati" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>
+                                        <option value="Refugee" @if($user->district == "Refugee") selected @endif>Refugee</option>
                                     </select>
-
                                 </div>
+
                                 <div>
                                     <x-label for="district_of_domicile" value="District of Domicile" :required="true"/>
-                                    <select id="district_of_domicile" name="district_of_domicile" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                    <select id="district_of_domicile" required name="district_of_domicile" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                                         <option value="">Select a district of domicile</option>
+                                        <option value="Muzaffarabad" @if($user->district == "Muzaffarabad") selected @endif>Muzaffarabad</option>
+                                        <option value="Jhelum Valley" @if($user->district == "Jhelum Valley") selected @endif>Jhelum Valley</option>
+                                        <option value="Neelum" @if($user->district == "Neelum") selected @endif>Neelum</option>
+                                        <option value="Mirpur" @if($user->district == "Mirpur") selected @endif>Mirpur</option>
+                                        <option value="Bhimber" @if($user->district == "Bhimber") selected @endif>Bhimber</option>
+                                        <option value="Kotli" @if($user->district == "Kotli") selected @endif>Kotli</option>
+                                        <option value="Poonch" @if($user->district == "Poonch") selected @endif>Poonch</option>
                                         <option value="Bagh" @if($user->district == "Bagh") selected @endif>Bagh</option>
-                                        <option value="Bhimber" @if($user->district == "Bhimber") selected @endif >Bhimber</option>
-                                        <option value="Hattian Bala" @if($user->district == "Hattian Bala") selected @endif >Hattian Bala</option>
-                                        <option value="Kotli" @if($user->district == "Kotli") selected @endif >Kotli</option>
-                                        <option value="Mirpur" @if($user->district == "Mirpur") selected @endif >Mirpur</option>
-                                        <option value="Muzaffarabad" @if($user->district == "Muzaffarabad") selected @endif >Muzaffarabad</option>
-                                        <option value="Neelum" @if($user->district == "Neelum") selected @endif >Neelum</option>
-                                        <option value="Poonch" @if($user->district == "Poonch") selected @endif >Poonch</option>
-                                        <option value="Sudhanoti" @if($user->district == "Sudhanoti") selected @endif >Sudhanoti</option>
+                                        <option value="Haveli" @if($user->district == "Haveli") selected @endif>Haveli</option>
+                                        <option value="Sudhnati" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>
+                                        <option value="Refugee" @if($user->district == "Refugee") selected @endif>Refugee</option>
                                     </select>
                                 </div>
+
 
                                 <div>
                                     <x-label for="contact_number" value="Contact Number" :required="true"/>
-                                    <x-input id="contact_number" name="contact_number" class="block mt-1 w-full" type="text" value="{{ $user->contact_number }}"/>
+                                    <x-input id="contact_number" required maxlength="12" minlength="12" name="contact_number" class="block mt-1 w-full" type="text" pattern="\d{4}-\d{7}" title="Contact number must be in the format 0000-0000000" value="{{ $user->contact_number }}"/>
                                 </div>
+
+
                                 <div>
                                     <x-label for="phone_no" value="Phone Number" :required="false"/>
-                                    <x-input id="phone_no" name="phone_no" class="block mt-1 w-full" type="text" value="{{ $user->phone_no }}"/>
+                                    <x-input id="phone_no" required name="phone_no" class="block mt-1 w-full" type="text" value="{{ $user->phone_no }}"/>
                                 </div>
                                 <div>
                                     <x-label for="religion" value="Religion" :required="true"/>
-                                    <select name="religion" id="religion" required class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                    <select name="religion" required id="religion" required class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                                         <option value="">Select a religion</option>
                                         <option value="islam" @if($user->religion == "islam") selected @endif>Islam</option>
                                         <option value="christianity" @if($user->religion == "christianity") selected @endif>Christianity</option>
@@ -117,7 +129,7 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <x-label for="mailing_address" value="Mailing Address" :required="true"/>
+                                    <x-label for="mailing_address" required value="Mailing Address" :required="true"/>
                                     <textarea id="mailing_address" name="mailing_address" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">{{ $user->mailing_address }}</textarea>
                                 </div>
 
@@ -129,7 +141,7 @@
                                     @else
                                         <img id="profilePicture" style="border: 1px solid #747474;" height="150" width="150" src="/images/profile_avatar.png">
                                     @endif
-                                    <x-input id="profile_pic_1" name="profile_pic_1" class="block mt-1 w-full" type="file"/>
+                                    <x-input id="profile_pic_1" required name="profile_pic_1" class="block mt-1 w-full" type="file"/>
                                 </div>
 
                                 <div>
@@ -139,7 +151,7 @@
                                     @else
                                         <img id="cnic_back_pic" style="border: 1px solid #747474;" height="150" width="150" src="/images/front.png">
                                     @endif
-                                    <x-input id="cnic_front" name="cnic_front" class="block mt-1 w-full" type="file"/>
+                                    <x-input id="cnic_front" required name="cnic_front" class="block mt-1 w-full" type="file"/>
                                 </div>
 
 
@@ -150,17 +162,24 @@
                                     @else
                                         <img id="cnic_back_pic" style="border: 1px solid #747474;" height="150" width="150" src="/images/back.png">
                                     @endif
-                                    <x-input id="cnic_back" name="cnic_back" class="block mt-1 w-full" type="file"/>
+                                    <x-input id="cnic_back" required name="cnic_back" class="block mt-1 w-full" type="file"/>
                                 </div>
 
 
                             </div>
                             {{--                            onclick="return confirm('Are you sure you want to update the basic information of Intern?')"--}}
                             <div class="flex items-center justify-end mt-4">
-                                <x-button class="ml-4" id="submit-btn"> {{ __('Update') }} </x-button>
-                                <a href="{{ route('education.edit', $user->id) }}"
-                                   class="inline-flex items-center px-4 py-2 bg-green-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 ml-4" id="submit-btn"> {{ __('Next') }}
-                                </a>
+                                @if(empty($user->cnic_number))
+                                    <x-button class="ml-4" id="submit-btn"> {{ __('Save & Next') }} </x-button>
+                                @else
+                                    <x-button class="ml-4" id="submit-btn"> {{ __('Update & Next') }} </x-button>
+                                @endif
+
+                                @if(!empty($user->cnic_number))
+                                    <a href="{{ route('education.edit', $user->id) }}"
+                                       class="inline-flex items-center px-4 py-2 bg-green-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 ml-4" id="submit-btn"> {{ __('Next') }}
+                                    </a>
+                                @endif
                             </div>
                         </form>
                     </div>
@@ -177,7 +196,24 @@
 
                 @role('Super-Admin|admin')
                 <div class="grid grid-cols-12 gap-6 ">
-                    <a href="{{ route('candidate.index') }}" class="transform  hover:scale-110 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white">
+                    <a href="{{ route('candidate.index',['filter[profile_status]=0']) }}" class="transform  hover:scale-110 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white">
+                        <div class="p-5">
+                            <div class="grid grid-cols-3 gap-1">
+                                <div class="col-span-2">
+                                    <div class="text-3xl font-bold leading-8">
+                                        {{ App\Models\User::where('id','>',3)->where('profile_status', 0)->count(); }}
+                                    </div>
+                                    <div class="mt-1 text-base font-extrabold text-black">
+                                        Candidates In-Process
+                                    </div>
+                                </div>
+                                <div class="col-span-1 flex items-center justify-end">
+                                    <img src="https://img.icons8.com/?size=128&id=123757&format=png" alt="employees on leave" class="h-12 w-12">
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{ route('candidate.index',['filter[profile_status]=1']) }}" class="transform  hover:scale-110 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white">
                         <div class="p-5">
                             <div class="grid grid-cols-3 gap-1">
                                 <div class="col-span-2">
@@ -189,11 +225,40 @@
                                     </div>
                                 </div>
                                 <div class="col-span-1 flex items-center justify-end">
-                                    <img src="https://img.icons8.com/?size=128&id=68661&format=png" alt="employees on leave" class="h-12 w-12">
+                                    <img src="https://img.icons8.com/?size=128&id=ZgPBQPTN8R9f&format=png" alt="employees on leave" class="h-12 w-12">
                                 </div>
                             </div>
                         </div>
                     </a>
+                    <a href="{{ route('candidate.index') }}" class="transform  hover:scale-110 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white">
+                        <div class="p-5">
+                            <div class="grid grid-cols-3 gap-1">
+                                <div class="col-span-2">
+                                    <div class="text-3xl font-bold leading-8">
+                                        {{ App\Models\User::where('id','>',3)->count(); }}
+                                    </div>
+                                    <div class="mt-1 text-base font-extrabold text-black">
+                                        Total Candidates
+                                    </div>
+                                </div>
+                                <div class="col-span-1 flex items-center justify-end">
+                                    <img src="https://img.icons8.com/?size=128&id=J0FhendbHVsR&format=png" alt="employees on leave" class="h-12 w-12">
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-6 gap-6 mt-6">
+                    <div class="col-span-6 md:col-span-6 lg:col-span-3">
+                        <div class="bg-white rounded-lg shadow-lg p-4" id="chart">
+                        </div>
+                    </div>
+
+                    <div class="col-span-6 md:col-span-6 lg:col-span-3">
+                        <div class="bg-white rounded-lg shadow-lg p-4" id="chart_two">
+                        </div>
+                    </div>
                 </div>
                 @endrole
 
@@ -222,6 +287,140 @@
                     cnicInput.value = cnic;
                 }
             });
+
+
+        document.getElementById('cnic_front').addEventListener('change', function() {
+            const file = this.files[0]; // Get the first file in the input
+            if (file) { // Check if any file is selected
+                const fileSize = file.size / 1024; // Get file size in KB
+                if (fileSize > 512) { // Check if the file size is greater than 512 KB
+                    alert('The file size must be less than 512 KB');
+                    this.value = ''; // Clear the selected file
+                }
+            }
+        });
+
+
+        document.getElementById('cnic_back').addEventListener('change', function() {
+            const file = this.files[0]; // Get the first file in the input
+            if (file) { // Check if any file is selected
+                const fileSize = file.size / 1024; // Get file size in KB
+                if (fileSize > 512) { // Check if the file size is greater than 512 KB
+                    alert('The file size must be less than 512 KB');
+                    this.value = ''; // Clear the selected file
+                }
+            }
+        });
+
+
+        document.getElementById('profile_pic_1').addEventListener('change', function() {
+            const file = this.files[0]; // Get the first file in the input
+            if (file) { // Check if any file is selected
+                const fileSize = file.size / 1024; // Get file size in KB
+                if (fileSize > 512) { // Check if the file size is greater than 512 KB
+                    alert('The file size must be less than 512 KB');
+                    this.value = ''; // Clear the selected file
+                }
+            }
+        });
+
         </script>
+        @role('Super-Admin|admin')
+        <script>
+            var options = {
+                   series: [@foreach($district_wise as $key => $value)
+                {{ $value }},
+            @endforeach],
+                   chart: {
+                    width: '100%',
+                    height: '400px',
+                    type: 'pie',
+                 },
+                  legend: {
+                    position: 'right',
+                },
+                    title: {
+                    text: 'AJK District Wise',
+                    align: 'center',
+                    margin: 0,
+                    offsetX: 0,
+                    offsetY: 0,
+                    floating: false,
+                    style: {
+                        fontSize:  '16px',
+                        fontWeight:  'bold',
+                        fontFamily:  undefined,
+                        color:  '#263238'
+                    },
+                },
+                 labels: [@foreach($district_wise as $key => $value)
+                '{{ $key }}',
+            @endforeach],
+                 responsive: [{
+                   breakpoint: 480,
+                   options: {
+                     chart: {
+                       width: 200
+                     },
+                     legend: {
+                       position: 'bottom'
+                     }
+                   }
+                 }]
+                 };
+
+                 var chart = new ApexCharts(document.querySelector("#chart"), options);
+                 chart.render();
+
+
+            // chart 2
+
+            var options_two = {
+               series: [@foreach($gender_wise as $key => $value)
+                {{ $value }},
+            @endforeach],
+               chart: {
+                width: '100%',
+                height: '400px',
+                type: 'pie',
+             },
+              legend: {
+                position: 'right',
+            },
+                title: {
+                text: 'Gender Wise Applied',
+                align: 'center',
+                margin: 0,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize:  '16px',
+                    fontWeight:  'bold',
+                    fontFamily:  undefined,
+                    color:  '#263238'
+                },
+            },
+             labels: [@foreach($gender_wise as $key => $value)
+                '{{ $key }}',
+            @endforeach],
+             responsive: [{
+               breakpoint: 480,
+               options: {
+                 chart: {
+                   width: 200
+                 },
+                 legend: {
+                   position: 'bottom'
+                 }
+               }
+             }]
+             };
+
+             var chart_two = new ApexCharts(document.querySelector("#chart_two"), options_two);
+             chart_two.render();
+
+        </script>
+        @endrole
     @endpush
 </x-app-layout>

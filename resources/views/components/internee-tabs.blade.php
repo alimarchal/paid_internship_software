@@ -1,8 +1,9 @@
 <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
     <ul class="flex flex-wrap -mb-px">
         <li class="mr-2"> <a href="{{ route('dashboard') }}" class="inline-block p-4 border-b-2 rounded-t-lg @if(request()->routeIs('dashboard')) text-blue-600 border-blue-600 @else  border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 @endif" >Basic Information</a> </li>
-        <li class="mr-2"> <a href="{{ route('education.edit', $user->id) }}" class="inline-block p-4 border-b-2 rounded-t-lg @if(request()->routeIs('education.*')) text-blue-600 border-blue-600 @else  border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 @endif" >Education</a> </li>
-        <li class="mr-2"> <a href="{{ route('experience.edit', $user->id) }}" class="inline-block p-4 border-b-2 rounded-t-lg @if(request()->routeIs('experience.*')) text-blue-600 border-blue-600 @else  border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 @endif" >Experience</a> </li>
-        <li class="mr-2"> <a href="{{ route('submit.edit', $user->id) }}" class="inline-block p-4 border-b-2 rounded-t-lg @if(request()->routeIs('submit.*')) text-blue-600 border-blue-600 @else  border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 @endif" >Submit</a> </li>
+
+        <li class="mr-2"> <a href="@if(!empty($user->cnic_number)) {{ route('education.edit', $user->id) }} @else javascript:; @endif " class="inline-block p-4 border-b-2 rounded-t-lg @if(request()->routeIs('education.*')) text-blue-600 border-blue-600 @else  border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 @endif" >Education</a> </li>
+        <li class="mr-2"> <a href="@if(!empty($user->cnic_number)) {{ route('experience.edit', $user->id) }}  @else javascript:; @endif " class="inline-block p-4 border-b-2 rounded-t-lg @if(request()->routeIs('experience.*')) text-blue-600 border-blue-600 @else  border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 @endif" >Experience</a> </li>
+        <li class="mr-2"> <a href="@if(!empty($user->cnic_number)) {{ route('submit.edit', $user->id) }}  @else javascript:; @endif " class="inline-block p-4 border-b-2 rounded-t-lg @if(request()->routeIs('submit.*')) text-blue-600 border-blue-600 @else  border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 @endif" >Submit</a> </li>
     </ul>
 </div>

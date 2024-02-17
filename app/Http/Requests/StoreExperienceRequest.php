@@ -29,8 +29,8 @@ class StoreExperienceRequest extends FormRequest
             'starting_date' => 'required|date',
             'ending_date' => 'required|date|after_or_equal:starting_date',
             'reason_of_leaving' => 'nullable|string',
-            'experience_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4096', // Adjust the allowed file types and max size as needed.
-            'relieving_letter' => 'nullable|file|mimes:pdf,doc,docx|max:4096', // Adjust the allowed file types and max size as needed.
+            'experience_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,pdf|max:4096', // Adjust the allowed file types and max size as needed.
+            'relieving_letter' => 'nullable|image|mimes:jpeg,png,jpg,gif,pdf|max:4096', // Adjust the allowed file types and max size as needed.
 
         ];
     }

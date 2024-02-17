@@ -95,7 +95,7 @@
                             <tr>
                                 <td style="width: 33.33%">
                                     <div style="float: left; margin-left: 40%">
-                                        @php $test_report_data = "https://pip.bankajk.com/" . $user->id; @endphp
+                                        @php $test_report_data = "https://pip.bankajk.com/candidate/show/" . $user->id; @endphp
                                         {!! DNS2D::getBarcodeSVG($test_report_data, 'QRCODE',3,3) !!}
                                     </div>
                                 </td>
@@ -103,7 +103,7 @@
                                 <td style="width: 33.33%; text-align: center;">
                                     <div style="margin: auto; margin-left: 30%">
                                         @if ($user->profile_photo_path)
-                                            <img src="{{ Storage::url($user->profile_photo_path) }}" alt="Internee Picture" style="width: 150px; height: 150px; border: 1px solid #000;">
+                                            <img src="{{ Storage::url($user->profile_photo_path) }}" alt="Internee Picture" style="width: 2in; height: 2in; border: 1px solid #000;">
                                         @else
                                             N/A
                                         @endif
@@ -143,7 +143,7 @@
                                 <td>{{ $user->gender }}</td>
                                 <td style="font-weight: bold;">Date of Birth</td>
                                 <td>{{ \Carbon\Carbon::parse($user->date_of_birth)->format('d-M-Y') }} -
-                                    ({{ \Carbon\Carbon::parse($user->date_of_birth)->diff(now())->format('%y years') }})
+                                    ({{ \Carbon\Carbon::parse($user->date_of_birth)->diff(now())->format('%y Y') }})
                                 </td>
                             </tr>
 
@@ -198,21 +198,21 @@
                                     <th class="border-black border px-4 py-2 text-left">No</th>
                                     <th class="border-black border px-4 py-2 text-left">Degree</th>
                                     <th class="border-black border px-4 py-2 text-left">University</th>
-                                    <th class="border-black border px-4 py-2 text-left"> Year / CGPA</th>
-                                    <th class="border-black border px-4 py-2 text-left">Div / % / Marks</th>
+                                    <th class="border-black border px-4 py-2 text-left"> Year / Division</th>
+                                    <th class="border-black border px-4 py-2 text-left"> OBTAIN / TOTAL = PERCENTAGE</th>
                                     <th class="border-black border px-4 py-2 text-left">Major Subject</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                @foreach($user->education_degrees->sortBy('passing_year') as $degree)
+                                @foreach($user->education_degrees->sortBy('passing_year') as $deg)
                                     <tr class="border-black">
                                         <td class="border-black border px-4 py-2">{{ $loop->iteration }}</td>
-                                        <td class="border-black border px-4 py-2"> {{ $degree->education_level }}</td>
-                                        <td class="border-black border px-4 py-2"> {{ $degree->board_university_name }}</td>
-                                        <td class="border-black border px-4 py-2 text-left">{{ $degree->passing_year }} / {{ $degree->cgpa_cpa_grade }}</td>
-                                        <td class="border-black border px-4 py-2 text-left">{{ $degree->division }} - {{ $degree->percentage_marks }}</td>
-                                        <td class="border-black border px-4 py-2 text-left">{{ $degree->major_subject }}</td>
+                                        <td class="border-black border px-4 py-2"> {{ $deg->education_level }}</td>
+                                        <td class="border-black border px-4 py-2"> {{ $deg->board_university_name }}</td>
+                                        <td class="border-black border px-4 py-2 text-left">{{ $deg->passing_year }} / {{ $deg->division }}</td>
+                                        <td class="border-black border px-4 py-2 text-left">{{ $deg->obtain_marks_cgpa }} / {{ $deg->total_marks_cgpa }} = {{ $deg->percentage_marks }}%</td>
+                                        <td class="border-black border px-4 py-2 text-left">{{ $deg->major_subject }}</td>
                                     </tr>
                                 @endforeach
 
@@ -222,9 +222,9 @@
                         @endif
 
 
-                        <h1 class="text-center font-extrabold">Experience</h1>
-                        @if($user->experience->isNotEmpty())
 
+                        @if($user->experience->isNotEmpty())
+                            <h1 class="text-center font-extrabold">Experience</h1>
                             <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
                                 <thead>
                                 <tr class="border-black">
@@ -239,20 +239,20 @@
                                 </thead>
                                 <tbody>
 
-                                @foreach($user->experience->sortBy('passing_year') as $degree)
+                                @foreach($user->experience->sortBy('passing_year') as $deg)
                                     <tr class="border-black">
                                         <td class="border-black border px-4 py-2">{{ $loop->iteration }}</td>
-                                        <td class="border-black border px-4 py-2"> {{ $degree->organization }}</td>
-                                        <td class="border-black border px-4 py-2"> {{ $degree->designation }}</td>
+                                        <td class="border-black border px-4 py-2"> {{ $deg->organization }}</td>
+                                        <td class="border-black border px-4 py-2"> {{ $deg->designation }}</td>
                                         <td class="border-black border px-4 py-2">
-                                            @if($degree->government_private)
+                                            @if($deg->government_private)
                                                     Government
                                                 @else
                                                     Private
                                                 @endif</td>
-                                        <td class="border-black border px-4 py-2"> {{ number_format($degree->monthly_salary,2) }}</td>
-                                        <td class="border-black border px-4 py-2"> {{ $degree->starting_date }} / {{ $degree->ending_date }}</td>
-                                        <td class="border-black border px-4 py-2"> {{ $degree->reason_of_leaving }}</td>
+                                        <td class="border-black border px-4 py-2"> {{ number_format($deg->monthly_salary,2) }}</td>
+                                        <td class="border-black border px-4 py-2"> {{ $deg->starting_date }} / {{ $deg->ending_date }}</td>
+                                        <td class="border-black border px-4 py-2"> {{ $deg->reason_of_leaving }}</td>
                                     </tr>
                                 @endforeach
 
@@ -268,26 +268,49 @@
                         <br>
 
 
-
-                        @if($user->education_degrees->isNotEmpty())
-
+                            <h1 class="text-center font-extrabold">CNIC Font</h1>
                             <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
-
                                 <tbody>
-                                @foreach($user->education_degrees->sortBy('passing_year') as $degree)
                                     <tr class="border-black">
                                         <td class="border-black border px-4 py-2" style="margin: auto;">
-                                            @if(!empty($degree->degree_photo_path))
-                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($degree->degree_photo_path) }}" style="width: 8in;" alt="Education Degree">
+                                            @if(!empty($user->cnic_front_path))
+                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($user->cnic_front_path) }}" style="width: 3.5in; height: 2.0in; margin: auto;" alt="CNIC Front">
+                                            @endif
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        <h1 class="text-center font-extrabold">CNIC Back</h1>
+                        <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
+                            <tbody>
+                            <tr class="border-black">
+                                <td class="border-black border px-4 py-2" style="margin: auto;">
+                                    @if(!empty($user->cnic_back_path))
+                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($user->cnic_back_path) }}" style="width: 3.5in; height: 2.0in; margin: auto;"  alt="CNIC Back">
+                                    @endif
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
+                        @if($user->education_degrees->isNotEmpty())
+                            <h1 class="text-center font-extrabold" >Education Degrees</h1>
+                            <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
+                                <tbody>
+                                @foreach($user->education_degrees->sortBy('passing_year') as $deg)
+                                    <tr class="border-black">
+                                        <td class="border-black border px-4 py-2" style="margin: auto;">
+                                            @if(!empty($deg->degree_photo_path))
+                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($deg->degree_photo_path) }}" style="width: 8in; height: 8in; margin: auto;"  >
                                             @endif
 
                                         </td>
                                     </tr>
                                 @endforeach
-
                                 </tbody>
                             </table>
-
                         @endif
 
 
@@ -298,11 +321,11 @@
                             <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
 
                                 <tbody>
-                                @foreach($user->experience->sortBy('passing_year') as $degree)
+                                @foreach($user->experience->sortBy('passing_year') as $deg)
                                     <tr class="border-black">
                                         <td class="border-black border px-4 py-2" style="margin: auto;">
-                                            @if(!empty($degree->experience_photo_path))
-                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($degree->experience_photo_path) }}" style="width: 8in;" alt="Education Degree">
+                                            @if(!empty($deg->experience_photo_path))
+                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($deg->experience_photo_path) }}" style="width: 8in; height: 8in; margin: auto;"  alt="Education Degree">
                                             @endif
 
                                         </td>

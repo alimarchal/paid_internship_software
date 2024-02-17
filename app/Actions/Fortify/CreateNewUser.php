@@ -23,12 +23,21 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
+            'degree_level' => ['required'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'date_of_birth' => [
                 'required',
                 'date', // Ensure that the input is a valid date
-                'before_or_equal:' . now()->subYears(18)->format('Y-m-d'), // Must be 18 years or older
-                'after_or_equal:' . now()->subYears(25)->format('Y-m-d'),  // Must be less than 25 years
+                'before_or_equal:' . '2006-03-01', // Must be 18 years or older
+                'after_or_equal:' .  '1997-03-01',  // Must be less than 27 years
+            ],
+            'nationality' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'Pakistani_National') {
+                        $fail('You are not eligible.');
+                    }
+                },
             ],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
@@ -38,6 +47,7 @@ class CreateNewUser implements CreatesNewUsers
 
         $user = User::create([
             'name' => $input['name'],
+            'degree_level' => $input['degree_level'],
             'email' => $input['email'],
             'date_of_birth' => $input['date_of_birth'],
             'password' => Hash::make($input['password']),

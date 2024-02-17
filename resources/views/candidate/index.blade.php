@@ -1,10 +1,10 @@
 <x-app-layout>
     @push('custom_headers')
-        <link rel="stylesheet" href="https://cms.ajkced.gok.pk/daterange/daterangepicker.min.css">
-        <script src="https://cms.ajkced.gok.pk/daterange/jquery-3.6.0.min.js"></script>
-        <script src="https://cms.ajkced.gok.pk/daterange/moment.min.js"></script>
-        <script src="https://cms.ajkced.gok.pk/daterange/knockout-3.5.1.js" defer></script>
-        <script src="https://cms.ajkced.gok.pk/daterange/daterangepicker.min.js" defer></script>
+        <link rel="stylesheet" href="{{ url('jsandcss/daterangepicker.min.css') }}">
+        <script src="{{ url('jsandcss/jquery-3.6.0.min.js') }}"></script>
+        <script src="{{ url('jsandcss/moment.min.js') }}"></script>
+        <script src="{{ url('jsandcss/knockout-3.5.1.js') }}" defer></script>
+        <script src="{{ url('jsandcss/daterangepicker.min.js') }}" defer></script>
     @endpush
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight inline-block">
@@ -54,6 +54,17 @@
                         <x-input id="fathers_name" class="block mt-1 w-full" type="text" name="filter[fathers_name]" value="{{ request('filter.fathers_name') }}" />
                     </div>
 
+                    <div>
+                        <x-label for="contact_number" value="{{ __('Contact Number / Mobile') }}" />
+                        <x-input id="contact_number" class="block mt-1 w-full" type="text" name="filter[contact_number]" value="{{ request('filter.cnic_number') }}" />
+                    </div>
+                    <!-- CNIC -->
+                    <div>
+                        <x-label for="cnic_number" value="{{ __('CNIC') }}" />
+                        <x-input id="cnic_number" class="block mt-1 w-full" type="text" name="filter[cnic_number]" value="{{ request('filter.cnic_number') }}" />
+                    </div>
+
+
                     <!-- Gender -->
                     <div>
                         <x-label for="gender" value="{{ __('Gender') }}" />
@@ -81,41 +92,68 @@
 
                     <div>
                         <x-label for="district" value="District" :required="false"/>
-                        <select id="district" name="district" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                        <select id="district" name="filter[district]" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                             <option value="">Select a district</option>
-                            <option value="Bagh" {{ request('filter.district') === 'Bagh' ? 'selected' : '' }}>Bagh</option>
-                            <option value="Bhimber" {{ request('filter.district') === 'Bhimber' ? 'selected' : '' }}>Bhimber</option>
-                            <option value="Hattian Bala" {{ request('filter.district') === 'Hattian Bala' ? 'selected' : '' }}>Hattian Bala</option>
-                            <option value="Kotli" {{ request('filter.district') === 'Kotli' ? 'selected' : '' }}>Kotli</option>
-                            <option value="Mirpur" {{ request('filter.district') === 'Mirpur' ? 'selected' : '' }}>Mirpur</option>
                             <option value="Muzaffarabad" {{ request('filter.district') === 'Muzaffarabad' ? 'selected' : '' }}>Muzaffarabad</option>
+                            <option value="Jhelum Valley" {{ request('filter.district') === 'Jhelum Valley' ? 'selected' : '' }}>Jhelum Valley</option>
                             <option value="Neelum" {{ request('filter.district') === 'Neelum' ? 'selected' : '' }}>Neelum</option>
+                            <option value="Mirpur" {{ request('filter.district') === 'Mirpur' ? 'selected' : '' }}>Mirpur</option>
+                            <option value="Bhimber" {{ request('filter.district') === 'Bhimber' ? 'selected' : '' }}>Bhimber</option>
+                            <option value="Kotli" {{ request('filter.district') === 'Kotli' ? 'selected' : '' }}>Kotli</option>
                             <option value="Poonch" {{ request('filter.district') === 'Poonch' ? 'selected' : '' }}>Poonch</option>
+                            <option value="Bagh" {{ request('filter.district') === 'Bagh' ? 'selected' : '' }}>Bagh</option>
+                            <option value="Haveli" {{ request('filter.district') === 'Haveli' ? 'selected' : '' }}>Haveli</option>
                             <option value="Sudhanoti" {{ request('filter.district') === 'Sudhanoti' ? 'selected' : '' }}>Sudhanoti</option>
+                            <option value="Refugee" {{ request('filter.district') === 'Refugee' ? 'selected' : '' }}>Refugee</option>
                         </select>
                     </div>
 
                     <div>
                         <x-label for="district_of_domicile" value="District of Domicile" :required="false"/>
-                        <select id="district_of_domicile" name="district_of_domicile" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                        <select id="district_of_domicile" name="filter[district_of_domicile]" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                             <option value="">Select a district of domicile</option>
-                            <option value="Bagh" {{ request('filter.district_of_domicile') === 'Bagh' ? 'selected' : '' }}>Bagh</option>
-                            <option value="Bhimber" {{ request('filter.district_of_domicile') === 'Bhimber' ? 'selected' : '' }}>Bhimber</option>
-                            <option value="Hattian Bala" {{ request('filter.district_of_domicile') === 'Hattian Bala' ? 'selected' : '' }} >Hattian Bala</option>
-                            <option value="Kotli" {{ request('filter.district_of_domicile') === 'Kotli' ? 'selected' : '' }} >Kotli</option>
-                            <option value="Mirpur" {{ request('filter.district_of_domicile') === 'Mirpur' ? 'selected' : '' }} >Mirpur</option>
-                            <option value="Muzaffarabad" {{ request('filter.district_of_domicile') === 'Muzaffarabad' ? 'selected' : '' }} >Muzaffarabad</option>
-                            <option value="Neelum" {{ request('filter.district_of_domicile') === 'Neelum' ? 'selected' : '' }} >Neelum</option>
-                            <option value="Poonch" {{ request('filter.district_of_domicile') === 'Poonch' ? 'selected' : '' }} >Poonch</option>
-                            <option value="Sudhanoti" {{ request('filter.district_of_domicile') === 'Sudhanoti' ? 'selected' : '' }} >Sudhanoti</option>
+                            <option value="Muzaffarabad" {{ request('filter.district') === 'Muzaffarabad' ? 'selected' : '' }}>Muzaffarabad</option>
+                            <option value="Jhelum Valley" {{ request('filter.district') === 'Jhelum Valley' ? 'selected' : '' }}>Jhelum Valley</option>
+                            <option value="Neelum" {{ request('filter.district') === 'Neelum' ? 'selected' : '' }}>Neelum</option>
+                            <option value="Mirpur" {{ request('filter.district') === 'Mirpur' ? 'selected' : '' }}>Mirpur</option>
+                            <option value="Bhimber" {{ request('filter.district') === 'Bhimber' ? 'selected' : '' }}>Bhimber</option>
+                            <option value="Kotli" {{ request('filter.district') === 'Kotli' ? 'selected' : '' }}>Kotli</option>
+                            <option value="Poonch" {{ request('filter.district') === 'Poonch' ? 'selected' : '' }}>Poonch</option>
+                            <option value="Bagh" {{ request('filter.district') === 'Bagh' ? 'selected' : '' }}>Bagh</option>
+                            <option value="Haveli" {{ request('filter.district') === 'Haveli' ? 'selected' : '' }}>Haveli</option>
+                            <option value="Sudhanoti" {{ request('filter.district') === 'Sudhanoti' ? 'selected' : '' }}>Sudhanoti</option>
+                            <option value="Refugee" {{ request('filter.district') === 'Refugee' ? 'selected' : '' }}>Refugee</option>
                         </select>
                     </div>
 
-                    <!-- Cast -->
+
                     <div>
-                        <x-label for="cnic_number" value="{{ __('CNIC') }}" />
-                        <x-input id="cnic_number" class="block mt-1 w-full" type="text" name="filter[cnic_number]" value="{{ request('filter.cnic_number') }}" />
+                        <x-label for="education_degrees_search" value="Subject" />
+                        <select id="education_degrees_search" name="filter[education_degrees_search.major_subject]" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                            <option value="">Please select a subject</option>
+                            <option value="Biology/Physics/Commerce (In Case of Metric/FSC)" {{ request('filter.education_degrees_search.major_subject') === 'Biology/Physics/Commerce (In Case of Metric/FSC)' ? 'Economics' : '' }}>Biology/Physics/Commerce (In Case of Metric/FSC)</option>
+                            <option value="Economics" {{ request('filter.education_degrees_search.major_subject') === 'Male' ? 'Economics' : '' }}>Economics</option>
+                            <option value="Business Administration" {{ request('filter.education_degrees_search.major_subject') === 'Business Administration' ? 'selected' : '' }}>Business Administration</option>
+                            <option value="Accounting" {{ request('filter.education_degrees_search.major_subject') === 'Accounting' ? 'selected' : '' }}>Accounting</option>
+                            <option value="Finance" {{ request('filter.education_degrees_search.major_subject') === 'Finance' ? 'selected' : '' }}>Finance</option>
+                            <option value="Commerce" {{ request('filter.education_degrees_search.major_subject') === 'Commerce' ? 'selected' : '' }}>Commerce</option>
+                            <option value="CS/MCS/MIT" {{ request('filter.education_degrees_search.major_subject') === 'CS/MCS/MIT' ? 'selected' : '' }}>Computer Science & IT / MCS / IT</option>
+                        </select>
                     </div>
+
+                    <div>
+                        <x-label for="profile_status" value="{{ __('Submit Status') }}" />
+                        <select name="filter[profile_status]" id="profile_status" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                            <option value="">Select a status</option>
+                            <option value="0" {{ request('filter.profile_status') === 'Male' ? 'selected' : '' }}>In-Process</option>
+                            <option value="1" {{ request('filter.profile_status') === 'Female' ? 'selected' : '' }}>Completed</option>
+                        </select>
+                    </div>
+
+
+
+
+
 
                 </div>
 
@@ -182,6 +220,15 @@
 
 
                             <th scope="col" class="px-1 py-2 border border-black  text-center print:hidden">
+                                Education
+                            </th>
+
+
+                            <th scope="col" class="px-1 py-2 border border-black  text-center print:hidden">
+                                Status
+                            </th>
+
+                            <th scope="col" class="px-1 py-2 border border-black  text-center print:hidden">
                                 Action
                             </th>
                         </tr>
@@ -229,9 +276,25 @@
                                 </td>
 
                                 <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white print:hidden">
-                                    {{ \Carbon\Carbon::parse($candidate->created_at)->format('d-M-Y') }}
+                                    {{ \Carbon\Carbon::parse($candidate->created_at)->format('d-M-Y H:i:s') }}
                                 </td>
 
+
+                                <td class="border px-0.5 py-2 border-black font-medium text-black text-center dark:text-white print:hidden">
+                                    @php
+                                        $csDegree = $candidate->education_degrees->whereIn('major_subject', ['Economics', 'Business Administration', 'Accounting', 'Finance', 'Commerce', 'CS/MCS/MIT'])->first();
+                                    @endphp
+                                    @if($csDegree)
+                                        {{ $csDegree->major_subject }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+
+
+                                <td class="border px-0.5 py-2 @if($candidate->profile_status == 1) bg-green-500 @else bg-red-500 @endif  border-black font-medium text-black text-center dark:text-white print:hidden">
+                                    @if($candidate->profile_status == 1) Submitted @else In-Complete @endif
+                                </td>
 
                                 <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white print:hidden">
                                     <a href="{{ route('candidate.print', $candidate->id) }}" class="inline-block">
@@ -242,18 +305,11 @@
                                 </td>
                             </tr>
                         @endforeach
-
-
-
-
-
-
                         </tbody>
                     </table>
-
-
-
+                        {{ $candidates->links() }}
                 </div>
+
             </div>
         </div>
     </div>

@@ -15,6 +15,8 @@ class Education extends Model
         'board_university_name',
         'passing_year',
         'cgpa_cpa_grade',
+        'total_marks_cgpa',
+        'obtain_marks_cgpa',
         'division',
         'percentage_marks',
         'major_subject',
@@ -25,4 +27,5 @@ class Education extends Model
     {
         return $this->belongsTo(User::class);
     }
+
 }

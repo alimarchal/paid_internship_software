@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('education_level')->nullable();
             $table->string('board_university_name')->nullable();
             $table->integer('passing_year')->nullable();
+            $table->decimal('total_marks_cgpa',14,2)->nullable();
+            $table->decimal('obtain_marks_cgpa',14,2)->nullable();
             $table->string('cgpa_cpa_grade')->nullable();
             $table->string('division')->nullable();
             $table->string('percentage_marks')->nullable();

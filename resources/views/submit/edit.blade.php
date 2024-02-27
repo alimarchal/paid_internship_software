@@ -19,6 +19,7 @@
                     <!-- resources/views/users/create.blade.php -->
                     <x-validation-errors class="mb-4 mt-4"/>
 
+
                     <form action="{{ route('submit.store') }}" method="POST" class="space-y-4">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-4">

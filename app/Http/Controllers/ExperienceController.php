@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateExperienceRequest;
 use App\Models\Education;
 use App\Models\Experience;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +27,15 @@ class ExperienceController extends Controller
         if (!$request->has('agreement')) {
             session()->flash('error', 'You must agree to the terms and conditions before submitting your application.');
             return back(); // Assuming you want to send the user back to the form page.
+        }
+
+
+
+        $deadline = Carbon::create(2024, 2, 27, 23, 59, 59);
+        $now = Carbon::now();
+
+        if ($now->greaterThan($deadline)) {
+            return back()->with('error', 'The internship deadline is now complete. You cannot submit your application as the deadline was 27 Feb 2024 at 23:59:59 as per advertised.');
         }
 
         $found_degree = 0;

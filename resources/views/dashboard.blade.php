@@ -83,7 +83,7 @@
                                         <option value="Poonch" @if($user->district == "Poonch") selected @endif>Poonch</option>
                                         <option value="Bagh" @if($user->district == "Bagh") selected @endif>Bagh</option>
                                         <option value="Haveli" @if($user->district == "Haveli") selected @endif>Haveli</option>
-                                        <option value="Sudhnati" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>
+                                        <option value="Sudhanoti" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>
                                         <option value="Refugee" @if($user->district == "Refugee") selected @endif>Refugee</option>
                                     </select>
                                 </div>
@@ -101,7 +101,7 @@
                                         <option value="Poonch" @if($user->district == "Poonch") selected @endif>Poonch</option>
                                         <option value="Bagh" @if($user->district == "Bagh") selected @endif>Bagh</option>
                                         <option value="Haveli" @if($user->district == "Haveli") selected @endif>Haveli</option>
-                                        <option value="Sudhnati" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>
+                                        <option value="Sudhanoti" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>
                                         <option value="Refugee" @if($user->district == "Refugee") selected @endif>Refugee</option>
                                     </select>
                                 </div>
@@ -188,7 +188,7 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="px-6 mb-4 pt-4 text-center font-bold lg:px-8 bg-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:border-gray-700">
                         <x-status-message class="mb-4"/>
-                        You have successfully submitted your application to HRMD of The Bank of Azad Jammu & Kashmir. <br>Your Application No is: {{ $user->id }} and Submission Date is: {{ $user->created_at->format('F d, Y') }}
+                        You have successfully submitted your application to HRMD of The Bank of Azad Jammu & Kashmir. <br>Your Application No is: {{ $user->id }} and Submission Date is: {{ $user->updated_at->format('F d, Y H:i:s') }}
                     </div>
                     @endif
                 </div>
@@ -259,6 +259,22 @@
                         <div class="bg-white rounded-lg shadow-lg p-4" id="chart_two">
                         </div>
                     </div>
+
+                    <div class="col-span-6 md:col-span-6 lg:col-span-4">
+                        <div class="bg-white rounded-lg shadow-lg p-4" id="chart_subjects">
+                        </div>
+                    </div>
+
+                    <div class="col-span-6 md:col-span-6 lg:col-span-2">
+                        <div class="bg-white rounded-lg shadow-lg p-4" id="service_length_chart">
+                        </div>
+                    </div>
+
+
+
+
+
+
                 </div>
                 @endrole
 
@@ -419,6 +435,179 @@
 
              var chart_two = new ApexCharts(document.querySelector("#chart_two"), options_two);
              chart_two.render();
+
+
+
+
+            var service_length_options = {
+                series: [ @foreach($finalAgeWiseData as $key => $value) {{ $value }}, @endforeach  ],
+                dataLabels: {
+                    formatter: function (val, opts) {
+                        return opts.w.config.series[opts.seriesIndex]
+                    },
+                },
+                chart: {
+                    type: 'donut',
+                    width: '100%',
+                    height: '200px',
+                    toolbar: {
+                        show: true,
+                        offsetX: 0,
+                        offsetY: 0,
+                        tools: {
+                            download: true,
+                            selection: true,
+                            zoom: true,
+                            zoomin: true,
+                            zoomout: true,
+                            pan: true,
+                            reset: true | '<img src="/static/icons/reset.png" width="20">',
+                            customIcons: []
+                        },
+                        export: {
+                            csv: {
+                                filename: undefined,
+                                columnDelimiter: ',',
+                                headerCategory: 'category',
+                                headerValue: 'value',
+                                dateFormatter(timestamp) {
+                                    return new Date(timestamp).toDateString()
+                                }
+                            },
+                            svg: {
+                                filename: undefined,
+                            },
+                            png: {
+                                filename: undefined,
+                            }
+                        },
+                        autoSelected: 'zoom'
+                    },
+                },
+                plotOptions: {
+                    pie: {
+                        startAngle: -90,
+                        endAngle: 90,
+                        offsetY: 10
+                    }
+                },
+                theme: {
+                    monochrome: {
+                        enabled: true,
+                        color: '#059f0f',
+                        shadeTo: 'dark',
+                        shadeIntensity: 0.65
+                    }
+                },
+                markers: {
+                    colors: ['#F44336', '#E91E63', '#9C27B0']
+                },
+                                labels: [ @foreach($finalAgeWiseData as $key => $value) '{{ $key }}', @endforeach ],
+                legend: {
+                    position: 'right',
+
+                },
+                title: {
+                    text: 'Total Age Wise - {{ $finalAgeWiseData['18-21 Years'] + $finalAgeWiseData['22-24 Years'] + $finalAgeWiseData['25-27 Years'] }}',
+                    align: 'left',
+                    margin: 0,
+                    offsetX: 0,
+                    offsetY: 0,
+                    floating: false,
+                    style: {
+                        fontSize:  '16px',
+                        fontWeight:  'bold',
+                        fontFamily:  undefined,
+                        color:  '#263238'
+                    },
+                },
+                grid: {
+                    padding: {
+                        bottom: -70
+                    }
+                },
+                responsive: [{
+                    breakpoint: 678,
+                    options: {
+                        chart: {
+                            width: '100%',
+                            height:'180px'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
+            var service_length_chart = new ApexCharts(document.querySelector("#service_length_chart"), service_length_options);
+            service_length_chart.render();
+
+
+
+
+      var options_subjects = {
+          series: [{
+          name: 'Total Applied',
+          data: [@foreach($degreeCountsFormatted as $key => $value) {{ $value }}, @endforeach  ]
+        }],
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+
+        title: {
+        text: 'Major Subject Wise Applied',
+        align: 'center',
+        margin: 0,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+            fontSize:  '16px',
+            fontWeight:  'bold',
+            fontFamily:  undefined,
+            color:  '#263238'
+        },
+    },
+
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            endingShape: 'rounded'
+          },
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent']
+        },
+        xaxis: {
+          categories: [@foreach($degreeCountsFormatted as $key => $value) '{{ $key }}', @endforeach],
+        },
+        yaxis: {
+          title: {
+            text: 'Total (Count)'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return "" + val + ""
+            }
+          }
+        }
+        };
+
+        var chart_options_subjects = new ApexCharts(document.querySelector("#chart_subjects"), options_subjects);
+        chart_options_subjects.render();
+
 
         </script>
         @endrole

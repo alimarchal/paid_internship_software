@@ -27,8 +27,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::get('dashboard',[\App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
 
-
-
     Route::put('user/{user}', [\App\Http\Controllers\UserController::class, 'update'])->name('user.update');
 
     Route::get('education/{user}/edit',[\App\Http\Controllers\EducationController::class, 'edit'])->name('education.edit');

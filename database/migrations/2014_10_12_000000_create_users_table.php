@@ -36,6 +36,8 @@ return new class extends Migration
             $table->string('cnic_front_path', 2048)->nullable();
             $table->string('cnic_back_path', 2048)->nullable();
             $table->boolean('profile_status')->default(0);
+            $table->enum('status',['Pending','Shortlisted','Rejected'])->default('Pending');
+            $table->boolean('exam_taken')->default(0);
             $table->timestamps();
         });
     }

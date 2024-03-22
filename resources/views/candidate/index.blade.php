@@ -5,6 +5,9 @@
         <script src="{{ url('jsandcss/moment.min.js') }}"></script>
         <script src="{{ url('jsandcss/knockout-3.5.1.js') }}" defer></script>
         <script src="{{ url('jsandcss/daterangepicker.min.js') }}" defer></script>
+        <style>
+            table { font-size: 9px!important;}
+        </style>
     @endpush
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight inline-block">
@@ -31,7 +34,7 @@
         </div>
 
     </x-slot>
-    <div class="max-w-8xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 print:hidden " style="display: none" id="filters">
+    <div class="max-w-8xl mx-auto mt-12 px-4 sm:px-2 lg:px-8 print:hidden " style="display: none" id="filters">
         <div class="rounded-xl p-4 bg-white shadow-lg">
 
 
@@ -112,17 +115,17 @@
                         <x-label for="district_of_domicile" value="District of Domicile" :required="false"/>
                         <select id="district_of_domicile" name="filter[district_of_domicile]" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                             <option value="">Select a district of domicile</option>
-                            <option value="Muzaffarabad" {{ request('filter.district') === 'Muzaffarabad' ? 'selected' : '' }}>Muzaffarabad</option>
-                            <option value="Jhelum Valley" {{ request('filter.district') === 'Jhelum Valley' ? 'selected' : '' }}>Jhelum Valley</option>
-                            <option value="Neelum" {{ request('filter.district') === 'Neelum' ? 'selected' : '' }}>Neelum</option>
-                            <option value="Mirpur" {{ request('filter.district') === 'Mirpur' ? 'selected' : '' }}>Mirpur</option>
-                            <option value="Bhimber" {{ request('filter.district') === 'Bhimber' ? 'selected' : '' }}>Bhimber</option>
-                            <option value="Kotli" {{ request('filter.district') === 'Kotli' ? 'selected' : '' }}>Kotli</option>
-                            <option value="Poonch" {{ request('filter.district') === 'Poonch' ? 'selected' : '' }}>Poonch</option>
-                            <option value="Bagh" {{ request('filter.district') === 'Bagh' ? 'selected' : '' }}>Bagh</option>
-                            <option value="Haveli" {{ request('filter.district') === 'Haveli' ? 'selected' : '' }}>Haveli</option>
-                            <option value="Sudhanoti" {{ request('filter.district') === 'Sudhanoti' ? 'selected' : '' }}>Sudhanoti</option>
-                            <option value="Refugee" {{ request('filter.district') === 'Refugee' ? 'selected' : '' }}>Refugee</option>
+                            <option value="Muzaffarabad" {{ request('filter.district_of_domicile') === 'Muzaffarabad' ? 'selected' : '' }}>Muzaffarabad</option>
+                            <option value="Jhelum Valley" {{ request('filter.district_of_domicile') === 'Jhelum Valley' ? 'selected' : '' }}>Jhelum Valley</option>
+                            <option value="Neelum" {{ request('filter.district_of_domicile') === 'Neelum' ? 'selected' : '' }}>Neelum</option>
+                            <option value="Mirpur" {{ request('filter.district_of_domicile') === 'Mirpur' ? 'selected' : '' }}>Mirpur</option>
+                            <option value="Bhimber" {{ request('filter.district_of_domicile') === 'Bhimber' ? 'selected' : '' }}>Bhimber</option>
+                            <option value="Kotli" {{ request('filter.district_of_domicile') === 'Kotli' ? 'selected' : '' }}>Kotli</option>
+                            <option value="Poonch" {{ request('filter.district_of_domicile') === 'Poonch' ? 'selected' : '' }}>Poonch</option>
+                            <option value="Bagh" {{ request('filter.district_of_domicile') === 'Bagh' ? 'selected' : '' }}>Bagh</option>
+                            <option value="Haveli" {{ request('filter.district_of_domicile') === 'Haveli' ? 'selected' : '' }}>Haveli</option>
+                            <option value="Sudhanoti" {{ request('filter.district_of_domicile') === 'Sudhanoti' ? 'selected' : '' }}>Sudhanoti</option>
+                            <option value="Refugee" {{ request('filter.district_of_domicile') === 'Refugee' ? 'selected' : '' }}>Refugee</option>
                         </select>
                     </div>
 
@@ -141,12 +144,27 @@
                         </select>
                     </div>
 
+
+
+
                     <div>
                         <x-label for="profile_status" value="{{ __('Submit Status') }}" />
                         <select name="filter[profile_status]" id="profile_status" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                             <option value="">Select a status</option>
-                            <option value="0" {{ request('filter.profile_status') === 'Male' ? 'selected' : '' }}>In-Process</option>
-                            <option value="1" {{ request('filter.profile_status') === 'Female' ? 'selected' : '' }}>Completed</option>
+                            <option value="0" {{ request('filter.profile_status') === '0' ? 'selected' : '' }}>In-Process</option>
+                            <option value="1" {{ request('filter.profile_status') === '1' ? 'selected' : '' }}>Completed</option>
+                        </select>
+                    </div>
+
+
+                    <div>
+                        <x-label for="status" value="Shortlisted/Rejected/Pending" :required="false"/>
+                        <select name="filter[latestStatus.status]" id="status" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+{{--                        <select name="filter[status]" id="status" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">--}}
+                            <option value="">Select a status</option>
+                            <option value="Pending" {{ request('filter.latestStatus.status') === 'Pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="Shortlisted" {{ request('filter.latestStatus.status') === 'Shortlisted' ? 'selected' : '' }}>Shortlisted</option>
+                            <option value="Rejected" {{ request('filter.latestStatus.status') === 'Rejected' ? 'selected' : '' }}>Rejected</option>
                         </select>
                     </div>
 
@@ -168,149 +186,113 @@
     </div>
 
     <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden ">
-                <div class=" bg-white overflow-x-auto dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-8xl mx-auto sm:px-2 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden rounded-lg">
+                <div class="rounded-lg bg-white overflow-x-auto dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700">
 
-                    <table class="w-full text-sm border-collapse border border-slate-400 text-left text-black dark:text-gray-400">
-                        <thead class="text-black uppercase bg-gray-50 dark:bg-gray-700 ">
-                        <tr>
-
-                            <th scope="col" class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white">
-                                ID
-                            </th>
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center">
-                                Name
-                            </th>
-
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center">
-                                Father Name
-                            </th>
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center">
-                                Gender
-                            </th>
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center">
-                                Age
-                            </th>
-
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center">
-                                district
-                            </th>
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center">
-                                domicile
-                            </th>
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center">
-                                Mobile
-                            </th>
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center print:hidden">
-                                CNIC
-                            </th>
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center print:hidden">
-                                Applied On
-                            </th>
-
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center print:hidden">
-                                Education
-                            </th>
-
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center print:hidden">
-                                Status
-                            </th>
-
-                            <th scope="col" class="px-1 py-2 border border-black  text-center print:hidden">
-                                Action
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-
-                        @foreach ($candidates as $candidate)
-                            <tr class="bg-white  border-b dark:bg-gray-800 dark:border-black text-center">
-                                <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white">
-                                    {{ $candidate->id }}
-                                </td>
-
-                                <td class="border px-2 py-2  border-black font-medium text-black text-left dark:text-white">
-                                    {{ ucwords(strtolower($candidate->name)) }}
-                                </td>
-
-                                <td class="border px-2 py-2  border-black font-medium text-black text-left dark:text-white">
-                                    {{ ucwords(strtolower($candidate->fathers_name)) }}
-                                </td>
-
-                                <td class="px-1 py-3 border border-black text-center">
-                                    {{ $candidate->gender }}
-                                </td>
-
-                                <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white">
-{{--                                    {{ \Carbon\Carbon::parse($candidate->date_of_birth)->format('d-M-Y') }} - --}}
-                                    {{ \Carbon\Carbon::parse($candidate->date_of_birth)->age }}y
-                                </td>
-
-                                <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white">
-                                    {{ $candidate->district }}
-                                </td>
-
-                                <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white">
-                                    {{ $candidate->district_of_domicile }}
-                                </td>
-
-                                <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white">
-                                    {{ $candidate->contact_number }}
-                                </td>
-
-                                <td class="px-1 py-3 border border-black text-center">
-                                    {{ $candidate->cnic_number }}
-                                </td>
-
-                                <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white print:hidden">
-                                    {{ \Carbon\Carbon::parse($candidate->created_at)->format('d-M-Y H:i:s') }}
-                                </td>
-
-
-                                <td class="border px-0.5 py-2 border-black font-medium text-black text-center dark:text-white print:hidden">
-                                    @php
-                                        $csDegree = $candidate->education_degrees->whereIn('major_subject', ['Economics', 'Business Administration', 'Accounting', 'Finance', 'Commerce', 'CS/MCS/MIT'])->first();
-                                    @endphp
-                                    @if($csDegree)
-                                        {{ $csDegree->major_subject }}
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-
-
-                                <td class="border px-0.5 py-2 @if($candidate->profile_status == 1) bg-green-500 @else bg-red-500 @endif  border-black font-medium text-black text-center dark:text-white print:hidden">
-                                    @if($candidate->profile_status == 1) Submitted @else In-Complete @endif
-                                </td>
-
-                                <td class="border px-0.5 py-2  border-black font-medium text-black text-center dark:text-white print:hidden">
-                                    <a href="{{ route('candidate.print', $candidate->id) }}" class="inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
-                                        </svg>
-                                    </a>
-                                </td>
+                    <x-status-message class="mb-4"/>
+                    <div class="relative overflow-x-auto rounded-lg ">
+                        <table class="min-w-max w-full table-auto">
+                            <thead>
+                            <tr class="bg-gray-200 text-black uppercase text-sm">
+                                <th class="py-2 px-2 text-center">ID</th>
+                                <th class="py-2 px-2 text-center">Name</th>
+                                <th class="py-2 px-2 text-center">Age / Sex</th>
+                                <th class="py-2 px-2 text-center">district</th>
+                                <th class="py-2 px-2 text-center">domicile</th>
+                                <th class="py-2 px-2 text-center"> Mobile</th>
+                                <th class="py-2 px-2 text-center">CNIC</th>
+                                <th class="py-2 px-2 text-center">Applied On</th>
+                                <th class="py-2 px-2 text-center">Education</th>
+                                <th class="py-2 px-2 text-center">Profile</th>
+                                <th class="py-2 px-2 text-center"> Status</th>
+                                <th class="py-2 px-2 text-center">Action</th>
                             </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                        {{ $candidates->links() }}
-                </div>
+                            </thead>
+                            <tbody class="text-black text-sm leading-normal">
+                            @foreach ($candidates as $candidate)
+                                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                    <td class="py-1 px-2 text-center">
+                                        {{ $candidate->id }}
+                                    </td>
+                                    <td class="py-1 px-2 text-left">
+                                        {{ ucwords(strtolower($candidate->name)) }}
+                                    </td>
+                                    <td class="py-1 px-2 text-center">
+                                        {{ \Carbon\Carbon::parse($candidate->date_of_birth)->age }}y   @if($candidate->gender == "Male") / M @elseif($candidate->gender == "Female") F @endif
+                                    </td>
+                                    <td class="py-1 px-2 text-left">
+                                        {{ $candidate->district }}
+                                    </td>
+                                    <td class="py-1 px-2 text-left">
+                                        {{ $candidate->district_of_domicile }}
+                                    </td>
+                                    <td class="py-1 px-2 text-center">
+                                        {{ $candidate->contact_number }}
+                                    </td>
+                                    <td class="py-1 px-2 text-center">
+                                        {{ $candidate->cnic_number }}
+                                    </td>
+                                    <td class="py-1 px-2 text-center">
+                                        {{ \Carbon\Carbon::parse($candidate->created_at)->format('d-M-Y H:i:s') }}
+                                    </td>
+                                    <td class="py-1 px-2 text-center">
+                                        @php
+                                            $csDegree = $candidate->education_degrees->whereIn('major_subject', ['Economics', 'Business Administration', 'Accounting', 'Finance', 'Commerce', 'CS/MCS/MIT'])->first();
+                                        @endphp
+                                        @if($csDegree)
+                                            {{ $csDegree->major_subject }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td class="py-1 px-2 text-center @if($candidate->profile_status == 1) font-extrabold text-white bg-green-600 @else font-extrabold text-white bg-red-600 @endif">
+                                        @if($candidate->profile_status == 1) Submitted @else In-Complete @endif
+                                    </td>
+                                    <td class="py-1 px-2 text-center @if($candidate->status == "Shortlisted") bg-green-500 font-extrabold @elseif($candidate->status == "Pending") text-white bg-yellow-500 font-extrabold  @elseif($candidate->status == "Rejected") bg-red-500 font-extrabold @endif">
+                                        {{ $candidate->status }}
+                                    </td>
 
+                                    <td class="py-1 px-2 text-center">
+                                        <a href="{{ route('candidate.print', $candidate->id) }}" class="inline-flex ">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
+                                            </svg>
+                                        </a>
+                                    </td>
+
+
+
+
+{{--                                    <td class="py-1 px-2 text-center">--}}
+{{--                                        <div class="flex item-center justify-center">--}}
+{{--                                            <!-- Edit Button -->--}}
+{{--                                            <a href="{{ route('certificateCategory.edit', $cat) }}" class="inline-flex items-center px-4 py-2 bg-blue-800 dark:bg-blue-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-blue-800 uppercase tracking-widest hover:bg-blue-700 dark:hover:bg-white focus:bg-blue-700 dark:focus:bg-white active:bg-blue-900 dark:active:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-blue-800 transition ease-in-out duration-150">--}}
+{{--                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.207V18.5H3.793l13.439-13.439z"></path></svg>--}}
+{{--                                                Edit--}}
+{{--                                            </a>--}}
+
+{{--                                            <!-- Delete Button -->--}}
+{{--                                            --}}{{--                                    <form action="{{ route('course.destroy', $cat) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this role?');" class="ml-2">--}}
+{{--                                            --}}{{--                                        @csrf--}}
+{{--                                            --}}{{--                                        @method('DELETE')--}}
+{{--                                            --}}{{--                                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-800 dark:bg-red-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-red-800 uppercase tracking-widest hover:bg-red-700 dark:hover:bg-white focus:bg-red-700 dark:focus:bg-white active:bg-red-900 dark:active:bg-red-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-red-800 transition ease-in-out duration-150">--}}
+{{--                                            --}}{{--                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>--}}
+{{--                                            --}}{{--                                            Delete--}}
+{{--                                            --}}{{--                                        </button>--}}
+{{--                                            --}}{{--                                    </form>--}}
+{{--                                        </div>--}}
+{{--                                    </td>--}}
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
             </div>
+            {{ $candidates->links() }}
         </div>
     </div>
     @push('modals')

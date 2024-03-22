@@ -1,5 +1,15 @@
 <x-app-layout>
     @push('custom_headers')
+
+
+        <script src="https://cdn.tiny.cloud/1/izbyerk8x92uls8z2ulnezm5uaudhf41lw0lebop5ba724o5/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+        <script>
+            tinymce.init({
+              selector: 'textarea',
+              plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+              toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            });
+        </script>
         <style>
             table, td, th {
                 /*border: 1px solid;*/
@@ -74,7 +84,8 @@
                class="text-center px-4 py-1.5 text-gray-600 bg-white border rounded-lg focus:outline-none hover:bg-gray-100 transition-colors duration-200 transform dark:text-black dark:border-gray-200 dark:hover:bg-white dark:bg-gray-700"
                title="Back">
                 Back
-            </a>            <button onclick="window.print()" class=" text-center px-4 py-2 text-gray-600 bg-white border rounded-lg focus:outline-none hover:bg-gray-100 transition-colors duration-200 transform dark:text-black dark:border-gray-200 dark:hover:bg-white dark:bg-gray-700 ml-2" title="Members List">
+            </a>
+            <button onclick="window.print()" class=" text-center px-4 py-2 text-gray-600 bg-white border rounded-lg focus:outline-none hover:bg-gray-100 transition-colors duration-200 transform dark:text-black dark:border-gray-200 dark:hover:bg-white dark:bg-gray-700 ml-2" title="Members List">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                 </svg>
@@ -91,7 +102,7 @@
 
                     <div class="bg-white">
 
-                        <table class="table_header_print" style="margin: 0px;">
+                        <table style="margin: 0px;">
                             <tr>
                                 <td style="width: 33.33%">
                                     <div style="float: left; margin-left: 40%">
@@ -184,14 +195,22 @@
                                 <td colspan="2">{{ $user->mailing_address }}</td>
                             </tr>
 
+                            <tr>
+                                <td style="font-weight: bold;">Profile</td>
+                                <td>@if($user->profile_status == 1) Submitted @else In-Complete @endif</td>
+                                <td style="font-weight: bold;">Status</td>
+                                <td>{{ $user->status }}</td>
+                            </tr>
+
                         </table>
 
 
-                        <h1 class="text-center font-extrabold">Education</h1>
+
 
 
                         @if($user->education_degrees->isNotEmpty())
 
+                            <h1 class="text-center font-extrabold">Education</h1>
                             <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
                                 <thead>
                                 <tr class="border-black">
@@ -246,10 +265,10 @@
                                         <td class="border-black border px-4 py-2"> {{ $deg->designation }}</td>
                                         <td class="border-black border px-4 py-2">
                                             @if($deg->government_private)
-                                                    Government
-                                                @else
-                                                    Private
-                                                @endif</td>
+                                                Government
+                                            @else
+                                                Private
+                                            @endif</td>
                                         <td class="border-black border px-4 py-2"> {{ number_format($deg->monthly_salary,2) }}</td>
                                         <td class="border-black border px-4 py-2"> {{ $deg->starting_date }} / {{ $deg->ending_date }}</td>
                                         <td class="border-black border px-4 py-2"> {{ $deg->reason_of_leaving }}</td>
@@ -262,24 +281,26 @@
                         @endif
 
 
-
-
-
                         <br>
 
-
-                            <h1 class="text-center font-extrabold">CNIC Font</h1>
-                            <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
-                                <tbody>
-                                    <tr class="border-black">
-                                        <td class="border-black border px-4 py-2" style="margin: auto;">
-                                            @if(!empty($user->cnic_front_path))
-                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($user->cnic_front_path) }}" style="width: 3.5in; height: 2.0in; margin: auto;" alt="CNIC Front">
-                                            @endif
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="break-before-page mb-2">
+                            <!-- Content -->
+                            <div class="text-center mt-2 text-xl">
+                                <span class="uppercase underline" style="font-weight: bold;"></span>
+                            </div>
+                        </div>
+                        <h1 class="text-center font-extrabold">CNIC Font</h1>
+                        <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
+                            <tbody>
+                            <tr class="border-black">
+                                <td class="border-black border px-4 py-2" style="margin: auto;">
+                                    @if(!empty($user->cnic_front_path))
+                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($user->cnic_front_path) }}" style="width: 3.5in; height: 2.0in; margin: auto;" alt="CNIC Front">
+                                    @endif
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h1 class="text-center font-extrabold">CNIC Back</h1>
                         <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
@@ -287,7 +308,7 @@
                             <tr class="border-black">
                                 <td class="border-black border px-4 py-2" style="margin: auto;">
                                     @if(!empty($user->cnic_back_path))
-                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($user->cnic_back_path) }}" style="width: 3.5in; height: 2.0in; margin: auto;"  alt="CNIC Back">
+                                        <img src="{{ \Illuminate\Support\Facades\Storage::url($user->cnic_back_path) }}" style="width: 3.5in; height: 2.0in; margin: auto;" alt="CNIC Back">
                                     @endif
                                 </td>
                             </tr>
@@ -296,14 +317,20 @@
 
 
                         @if($user->education_degrees->isNotEmpty())
-                            <h1 class="text-center font-extrabold" >Education Degrees</h1>
+                            <div class="break-before-page mb-2">
+                                <!-- Content -->
+                                <div class="text-center mt-2 text-xl">
+                                    <span class="uppercase underline" style="font-weight: bold;"></span>
+                                </div>
+                            </div>
+                            <h1 class="text-center font-extrabold">Education Degrees</h1>
                             <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
                                 <tbody>
                                 @foreach($user->education_degrees->sortBy('passing_year') as $deg)
                                     <tr class="border-black">
                                         <td class="border-black border px-4 py-2" style="margin: auto;">
                                             @if(!empty($deg->degree_photo_path))
-                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($deg->degree_photo_path) }}" style="width: 8in; height: 8in; margin: auto;"  >
+                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($deg->degree_photo_path) }}" style="width: 8in; height: 8in; margin: auto;">
                                             @endif
 
                                         </td>
@@ -317,7 +344,6 @@
 
 
                         @if($user->experience->isNotEmpty())
-
                             <table class="table-auto w-full border-collapse border border-black" style="font-size: 12px;">
 
                                 <tbody>
@@ -325,7 +351,7 @@
                                     <tr class="border-black">
                                         <td class="border-black border px-4 py-2" style="margin: auto;">
                                             @if(!empty($deg->experience_photo_path))
-                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($deg->experience_photo_path) }}" style="width: 8in; height: 8in; margin: auto;"  alt="Education Degree">
+                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($deg->experience_photo_path) }}" style="width: 8in; height: 8in; margin: auto;" alt="Education Degree">
                                             @endif
 
                                         </td>
@@ -334,40 +360,79 @@
 
                                 </tbody>
                             </table>
+                        @endif
+
+
+                        <br>
+                        <br>
+                        <h1 class="text-3xl p-4 m-4 text-center font-extrabold bg-yellow-500 rounded-md">Human Resource Management Division</h1>
+
+                        @if($user->comments->isNotEmpty())
+                            <ol class="relative border-s border-gray-200 dark:border-gray-700  ml-12 mt-4 mb-4 ">
+                                @foreach($user->comments as $cmt)
+                                    <li class="mb-10 ms-6">
+                                    <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white dark:ring-black dark:bg-blue-900">
+                                        <svg class="w-2.5 h-2.5 text-blue-800 dark:text-blue-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                        </svg>
+                                    </span>
+                                        <h3 class="mb-1 text-lg font-semibold text-black dark:text-white"> {{ \App\Models\User::find($cmt->user_id_comment_by)->name }} Decided <span class="bg-red-500 text-white text-lg font-extrabold me-2 px-2.5 py-0.5 rounded ms-3">{{ $cmt->status }}</span>    @if($cmt->index) <span class="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 ms-3">Latest</span> @endif</h3>
+                                        <time class="block mb-2 text-lg  leading-none font-extrabold text-red-400 dark:text-red-500 mt-3">Decision on {{ \Carbon\Carbon::parse($cmt->created_at)->format('F j, Y G:i:s') }}</time>
+                                        <p class="text-lg font-extrabold text-black dark:text-black mt-2">{!! $cmt->comments !!}</p>
+                                    </li>
+                                @endforeach
+                            </ol>
 
                         @endif
 
+
+
+
+
+
+                        <form action="{{ route('candidate.shortlisted', $user->id) }}" method="POST" class="print:hidden">
+                            @csrf
+                            <div class="grid grid-cols-1 mb-8 pb-8 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-4" style="padding-left: 50px!important; padding-right: 50px!important;">
+                                <div>
+
+
+                                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Detail Decision Remarks</label>
+                                    <textarea id="comment" name="comment"  rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="block font-extrabold font-medium text-sm text-black" for="status">
+                                        Detail Decision Remarks
+                                        <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="status" required name="status" class="border-gray-300 dark:border-gray-700 dark:bg-black dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                        <option value="">None</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Shortlisted">Shortlisted</option>
+                                        <option value="Rejected">Rejected</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex items-center justify-end mt-1">
+                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150" id="submit-btn">
+                                        Save Final Decision
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-
-
                 </div>
             </div>
         </div>
-    </div> @push('modals')
+    </div>
+    @push('modals')
         <script>
-            // Add a script to format the CNIC input as 00000-0000000-0
-            document.getElementById('cnic').addEventListener('input', function (e) {
-                const cnicInput = e.target;
-                let cnic = cnicInput.value.replace(/[^0-9]/g, '');
-                if (cnic.length > 13) {
-                    cnic = cnic.slice(0, 13);
-                }
-                const parts = cnic.match(/(\d{5})(\d{7})(\d{1})?/);
-                if (parts) {
-                    let formattedCnic = parts[1] + '-' + parts[2];
-                    if (parts[3]) {
-                        formattedCnic += '-' + parts[3];
-                    }
-                    cnicInput.value = formattedCnic;
-                } else {
-                    cnicInput.value = cnic;
+            document.getElementById('submit-btn').addEventListener('click', function(event) {
+                const confirmed = confirm('Are you sure you have read all the profile of this candidate?');
+                if (!confirmed) {
+                    event.preventDefault(); // Prevent form submission
                 }
             });
-            // // Disable the submit button after it's clicked
-            // document.getElementById('submit-btn').addEventListener('click', function (e) {
-            //     // Disable the button to prevent multiple submissions
-            //     this.disabled = true;
-            // });
+
         </script>
     @endpush
 </x-app-layout>

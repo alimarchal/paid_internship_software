@@ -188,7 +188,12 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="px-6 mb-4 pt-4 text-center font-bold lg:px-8 bg-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:border-gray-700">
                         <x-status-message class="mb-4"/>
-                        You have successfully submitted your application to HRMD of The Bank of Azad Jammu & Kashmir. <br>Your Application No is: {{ $user->id }} and Submission Date is: {{ $user->updated_at->format('F d, Y H:i:s') }}
+                        You have successfully submitted your application to HRMD of The Bank of Azad Jammu & Kashmir. <br>Your Application No is: {{ $user->id }}
+
+                        <br>
+                        @if($user->profile_status == 1 && $user->status == "Shortlisted" & $user->exam_taken == 0)
+                            <a href="{{ route('start_session') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Start Your Test</a>
+                        @endif
                     </div>
                     @endif
                 </div>

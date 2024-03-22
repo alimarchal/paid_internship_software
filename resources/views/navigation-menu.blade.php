@@ -22,6 +22,10 @@
                         <x-nav-link href="{{ route('candidate.index') }}" :active="request()->routeIs('candidate.*')">
                             {{ __('Candidates') }}
                         </x-nav-link>
+
+                        <x-nav-link href="{{ route('report.call-letters') }}" :active="request()->routeIs('report.call-letters')">
+                            {{ __('Call Letters') }}
+                        </x-nav-link>
                     @endrole
                 </div>
             </div>

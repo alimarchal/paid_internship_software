@@ -132,7 +132,7 @@
 
                                     <div style="float: right; margin-right: 10%;">
                                         @php
-                                            $test_report_data = "Name: " . $candidates->name . " \nRoll No: 1" .  $candidates->id . "\n" . "The Bank of Azad Jammu & Kashmir";
+                                            $test_report_data = "Name: " . $candidates->name . " \nRoll No: " .  $candidates->id . "\nCNIC:" . $candidates->cnic_number;
                                         @endphp
                                         {!! DNS2D::getBarcodeSVG($test_report_data, 'QRCODE',3,3) !!}
                                     </div>

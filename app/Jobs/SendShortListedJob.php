@@ -32,7 +32,7 @@ class SendShortListedJob implements ShouldQueue
     {
         //
 //        Log::info("Dispatching job for user: {$this->user->id}");
-        Mail::to($this->user->email)->send(new ShortListed());
+        Mail::to($this->user->email)->send(new ShortListed($this->user));
 
     }
 }

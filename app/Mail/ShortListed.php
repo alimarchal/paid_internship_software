@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,13 +14,13 @@ class ShortListed extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $data;
+    public $user;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        $this->data = "The Test Coder";
+        $this->user = $user;
     }
 
     /**
@@ -28,7 +29,7 @@ class ShortListed extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Short Listed',
+            subject: 'Short Listed - Call Letter For MCQs Test at Bank AJK',
         );
     }
 

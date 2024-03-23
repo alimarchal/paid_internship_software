@@ -125,7 +125,6 @@
                                     </p>
                                     <p class="text-center font-extrabold capitalize " style="font-size: 14px;">
                                          (Admit Card)
-{{--Date: {{ date('d-m-Y') }} <br>--}}
                                     </p>
                                 </td>
                                 <td style="width: 20%; text-align: center;">

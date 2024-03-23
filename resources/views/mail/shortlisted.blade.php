@@ -1,12 +1,20 @@
 <x-mail::message>
-# Introduction
+# Dear Candidate,
 
-{{ $data }}
-The body of your message.
+Reference your application for Paid Internship Program 2024 with BAJK, you are required to appear for test as per schedule given below.
 
-<x-mail::button :url="''">
-Button Text
+<strong>Test Date & Day: {{ \Carbon\Carbon::parse($user->test_date)->format('d F, Y, l') }}</strong><br>
+<strong>Test Start Time: {{ $user->reporting_time }} (PST)</strong><br>
+<strong>Duration: 90 Minutes</strong><br>
+<strong>Test Centre: {{ $user->test_center }}</strong><br>
+
+# You can sign in using the email address and password you selected during registration to download your call letter.
+
+<x-mail::button :url="'https://pip.bankajk.com/login'">
+Login
 </x-mail::button>
+
+# For Any Technical Help / Issue: Call 0300-8169924.
 
 Thanks,<br>
 {{ config('app.name') }}

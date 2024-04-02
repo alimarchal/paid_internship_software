@@ -20,7 +20,8 @@
 
                     <div class="px-6 mb-4 lg:px-8 bg-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:border-gray-700">
                         <!-- resources/views/users/create.blade.php -->
-                        <x-validation-errors class="mb-4 mt-4"/>
+                        <x-status-message class="ml-4 mt-4"/>
+                        <x-validation-errors class="ml-4 mt-4"/>
                         <form method="POST" action="{{ route('user.update', $user->id) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -187,7 +188,8 @@
             @else
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="px-6 mb-4 pt-4 text-center font-bold lg:px-8 bg-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:border-gray-700">
-                        <x-status-message class="mb-4"/>
+                        <x-status-message class="ml-4 mt-4"/>
+                        <x-validation-errors class="ml-4 mt-4"/>
                         You have successfully submitted your application to HRMD of The Bank of Azad Jammu & Kashmir. <br>
                         Your Application No is: {{ $user->id }}<br>
 {{--                        Status: @if(!empty($user->latestStatus)) <span class="text-red-600">{{ $user->latestStatus->status }}</span> @endif--}}
@@ -196,8 +198,14 @@
                         <br>
                         @if($user->profile_status == 1 && $user->status == "Shortlisted" & $user->exam_taken == 0)
                             <a href="{{ route('report.call-letters') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Download Your Roll No Slip</a> <br>
-                            @if($user->start_test == 1)
-                            <a href="{{ route('start_session') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Start Your Test</a>
+                            @php
+                                $now = now();
+                                $startTime = Carbon\Carbon::parse($user->start_test_time);
+                                $endTime = Carbon\Carbon::parse($user->end_test_time);
+                            @endphp
+
+                            @if ($user->start_test == 1 && $now->between($startTime, $endTime))
+                                <a href="{{ route('start_session') }}" class="inline-flex items-center px-4 py-2 m-4 bg-red-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Start Your Test</a>
                             @endif
                         @endif
                     </div>

@@ -216,7 +216,10 @@
                                         {{ $candidate->id }}
                                     </td>
                                     <td class="py-1 px-2 text-left">
-                                        {{ ucwords(strtolower($candidate->name)) }}
+                                        <a href="{{ route('candidate-user.password-change',$candidate->id) }}">
+                                            {{ ucwords(strtolower($candidate->name)) }}
+                                        </a>
+
                                     </td>
                                     <td class="py-1 px-2 text-center">
                                         {{ \Carbon\Carbon::parse($candidate->date_of_birth)->age }}y   @if($candidate->gender == "Male") / M @elseif($candidate->gender == "Female") F @endif

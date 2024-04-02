@@ -263,10 +263,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
 
     Route::get('reports/call-letters', [\App\Http\Controllers\ReportController::class, 'callLetters'])->name('report.call-letters');
+    Route::get('reports/result', [\App\Http\Controllers\ReportController::class, 'result'])->name('report.result');
 
 
     Route::post('shortlisted/submit/{user}', [\App\Http\Controllers\UserController::class, 'shortlisted'])->name('candidate.shortlisted');
 
+    Route::get('candidate/{user}/password-change', [\App\Http\Controllers\RandomUserQuestionController::class, 'password_change'])->name('candidate-user.password-change');
+    Route::put('candidate/{user}/password-change-update', [\App\Http\Controllers\RandomUserQuestionController::class, 'password_change_update'])->name('candidate-user.password-change-update');
     Route::get('start-session', [\App\Http\Controllers\RandomUserQuestionController::class, 'index'])->name('start_session');
     Route::post('save-answer', [\App\Http\Controllers\RandomUserQuestionController::class, 'store'])->name('save-answer');
+    Route::post('finish-exam', [\App\Http\Controllers\RandomUserQuestionController::class, 'finishExam'])->name('finish-exam');
 });

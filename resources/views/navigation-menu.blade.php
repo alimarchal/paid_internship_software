@@ -35,6 +35,13 @@
                     <x-nav-link href="{{ route('report.call-letters') }}" :active="request()->routeIs('report.call-letters')">
                         {{ __('Call Letters') }}
                     </x-nav-link>
+
+
+                    @if(Auth::user()->email == "dh_hrd@bankajk.com")
+                    <x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
+                        {{ __('Result') }}
+                    </x-nav-link>
+                    @endif
                     @endrole
                 </div>
             </div>

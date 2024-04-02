@@ -73,6 +73,15 @@ class User extends Authenticatable implements MustVerifyEmail
         'cnic_front_path',
         'cnic_back_path',
         'degree_level',
+        'test_center',
+        'reporting_time',
+        'test_date',
+        'exam_taken',
+        'start_test',
+        'start_test_time',
+        'end_test_time',
+        'profile_status',
+        'status',
     ];
 
     /**

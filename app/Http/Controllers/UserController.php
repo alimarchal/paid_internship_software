@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Comment;
+use App\Models\RandomUserQuestion;
 use App\Models\User;
 use Auth;
 use DB;
@@ -67,7 +68,9 @@ class UserController extends Controller
     {
         $role_name = \Auth::user()->roles->first()->name;
         if ($role_name == "admin" || $role_name == "Super-Admin") {
-            return view('candidate.print', compact('user'));
+            $get_user_questions = RandomUserQuestion::where('user_id', $user->id)->get();
+//            dd($get_user_questions);
+            return view('candidate.print', compact('user','get_user_questions'));
         }
         else {
             if (\Auth::user()->id != $user->id) {

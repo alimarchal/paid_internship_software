@@ -419,6 +419,71 @@
                                 </div>
                             </div>
                         </form>
+
+
+                        @if($get_user_questions->isNotEmpty())
+                            <h1 class="text-center font-extrabold">User Paper Questions</h1>
+{{--                            @if(Auth::user()->email == "dh_hrd@bankajk.com")--}}
+                                <div style="margin: 50px;">
+                                <table class="table-auto w-full border-collapse border border-black" style="font-size: 16px;">
+                                    {{--                                <thead>--}}
+                                    {{--                                <tr class="border-black">--}}
+                                    {{--                                    <th class="border-black border px-4 py-2 text-left">No</th>--}}
+                                    {{--                                    <th class="border-black border px-4 py-2 text-left">Degree</th>--}}
+                                    {{--                                    <th class="border-black border px-4 py-2 text-left">University</th>--}}
+                                    {{--                                    <th class="border-black border px-4 py-2 text-left"> Year / Division</th>--}}
+                                    {{--                                    <th class="border-black border px-4 py-2 text-left"> OBTAIN / TOTAL = PERCENTAGE</th>--}}
+                                    {{--                                    <th class="border-black border px-4 py-2 text-left">Major Subject</th>--}}
+                                    {{--                                </tr>--}}
+                                    {{--                                </thead>--}}
+                                    <tbody>
+
+                                    @foreach($get_user_questions as $question)
+                                        <tr class="border-black">
+                                            <td class="border-black border px-4 py-2" >{{ $loop->iteration }}</td>
+                                            <td class="border-black border px-4 py-2" >{!! \App\Models\Question::find($question->question_id)->text !!} {{ $question->question_id }}</td>
+                                        </tr>
+                                        <tr class="border-black">
+                                            <td class="border-black border px-4 py-2" colspan="2">
+                                                <ul class="list-none">
+                                                    @foreach(\App\Models\Question::find($question->question_id)->answers as $ans)
+                                                        <li style="padding-left: 100px" class="font-extrabold">{{ $ans->text }}
+                                                            @if(!empty($question->answer_id)) @if($question->answer_id == $ans->id) ✔ @endif  @endif
+                                                            @if($ans->is_correct == 1) (Correct Answer) @endif
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
+
+                                    <tr class="border-black">
+                                        <td class="border-black border px-4 py-2"></td>
+                                        <td class="border-black border px-4 py-2">
+                                            Total Question Assigned By System: {{ $get_user_questions->count('id') }}<br>
+                                            Attempt Question: {{ $get_user_questions->sum('is_answered') }}<br>
+                                            Correct Answers: {{ $get_user_questions->sum('is_correct') }}<br>
+                                            In-Correct Answers: {{ $get_user_questions->where('is_correct',0)->count() }}<br>
+                                            Total Marks: {{ $get_user_questions->count('id') }}<br>
+                                            Obtain Marks: {{ $get_user_questions->sum('is_correct') }}
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+{{--                            @endif--}}
+                        @else($get_user_questions->isEmpty())
+                            @if($user->exam_taken == 1) <h1 class="text-center font-extrabold">User Was Absent - No Record Exist</h1> @endif
+                        @endif
+
+
+                        <br>
+                        <br>
+
+
+
                     </div>
                 </div>
             </div>

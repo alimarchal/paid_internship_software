@@ -215,7 +215,8 @@
                                 </p>
 
                                 <ul class="list-disc pl-5  mb-2" style="font-size: 10px;">
-                                    <li>This Call Letter. Original CNIC or B-Form. </li>
+                                    <li>This Call Letter. </li>
+                                    <li> Original CNIC or B-Form. </li>
                                     <li>Incase loss of CNIC please bring original NADRA token with any other original document containing your photograph. Otherwise, you will not be allowed to appear in the Test.</li>
                                     <li>Please bring your original degrees / testimonials along-with one set of attested photocopies of all documents and a passport size photograph.</li>
                                 </ul>

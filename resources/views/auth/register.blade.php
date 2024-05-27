@@ -10,6 +10,10 @@
             @csrf
 
             <div>
+                <!-- Batch 1-->
+                <!--<span style="color:red; text-align:center;font-weight: bold;"> The internship application deadline has been extended to 10th March, 2024</span>-->
+                <span style="color:red; text-align:center;font-weight: bold;">
+               Eligibility is limited to <span style="font-weight: bold;">Mirpur/Bhimber</span> domicile holders Deadline June 10, 2024.</span>
                 <x-label for="name" value="{{ __('Your Full Name') }}" />
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             </div>
@@ -28,10 +32,10 @@
 
             <div class="mt-2">
                 <label class="block font-medium font-extrabold text-sm text-black" for="degree_level">
-                    Do you have Relevant Educational Qualification as Mentioned in  <a class="underline text-sm text-blue-600 hover:text-red-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ url('https://bankajk.com/eligibility.php') }}" target="_blank">
+                    Do you have Relevant Educational Qualification as Mentioned in  <a class="underline text-sm text-blue-600 hover:text-red-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ url('https://bankajk.com/eligibility-batch-two.php') }}" target="_blank">
                         {{ __('Eligibility Criteria') }}
                     </a>
-                     and Degree in these field <span class="text-red-600">Economics, Business Administration, Accounting, Finance, Commerce, Computer Sciences & IT</span>
+                    and Degree in these field <span class="text-red-600">Economics, Business Administration, Accounting, Finance, Commerce, Computer Sciences & IT</span>
                 </label>
                 <select id="degree_level" name="degree_level" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" required>
                     <option value="">None</option>
@@ -49,7 +53,7 @@
 
             <div class="mt-2">
                 <x-label for="date_of_birth" class="font-bold" value="{{ __('Date Of Birth (Max 27 Years)') }}" />
-                <x-input id="date_of_birth"  max="2006-03-01" min="1997-03-01"  class="block mt-1 w-full" type="date" name="date_of_birth" :value="old('date_of_birth')" required autocomplete="date_of_birth" />
+                <x-input id="date_of_birth"  max="2006-06-11" min="1997-06-11"  class="block mt-1 w-full" type="date" name="date_of_birth" :value="old('date_of_birth')" required autocomplete="date_of_birth" />
             </div>
 
 

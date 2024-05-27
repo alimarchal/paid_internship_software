@@ -37,7 +37,17 @@ class ReportController extends Controller
                 ->orderByDesc('correct_answer')
                 ->get();
 
-            return view('candidate.results', compact('users','results'));
+            return view('candidate.results', compact('users', 'results'));
+        }
+        elseif ($user->hasRole('Intern')) {
+            $cdt = User::where('profile_status', 1)->where('id', $user->id)->where('status', 'Shortlisted')->get();
+            $results = RandomUserQuestion::with('user')
+                ->select('user_id', DB::raw('COUNT(question_id) AS system_assigned_questions'), DB::raw('SUM(is_answered) AS attemp_questions'), DB::raw('SUM(is_correct) AS correct_answer'))
+                ->where('user_id', $user->id)
+                ->groupBy('user_id')
+                ->orderByDesc('correct_answer')
+                ->get();
+            return view('candidate.results', compact('cdt','user','results'));
         }
     }
 }

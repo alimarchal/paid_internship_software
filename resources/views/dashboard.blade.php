@@ -46,7 +46,7 @@
                                         @foreach($nationals as $key)
                                             <option value="{{ $key }}" @if($user->nationality == $key) selected @else
                                                 {{ $key == "Pakistani"?"selected":"" }}
-                                                    @endif>{{ $key }}</option>
+                                                @endif>{{ $key }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -75,17 +75,17 @@
                                     <x-label for="district" value="District" :required="true"/>
                                     <select id="district" required name="district" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                                         <option value="">Select a district</option>
-                                        <option value="Muzaffarabad" @if($user->district == "Muzaffarabad") selected @endif>Muzaffarabad</option>
-                                        <option value="Jhelum Valley" @if($user->district == "Jhelum Valley") selected @endif>Jhelum Valley</option>
-                                        <option value="Neelum" @if($user->district == "Neelum") selected @endif>Neelum</option>
+{{--                                        <option value="Muzaffarabad" @if($user->district == "Muzaffarabad") selected @endif>Muzaffarabad</option>--}}
+{{--                                        <option value="Jhelum Valley" @if($user->district == "Jhelum Valley") selected @endif>Jhelum Valley</option>--}}
+{{--                                        <option value="Neelum" @if($user->district == "Neelum") selected @endif>Neelum</option>--}}
                                         <option value="Mirpur" @if($user->district == "Mirpur") selected @endif>Mirpur</option>
                                         <option value="Bhimber" @if($user->district == "Bhimber") selected @endif>Bhimber</option>
-                                        <option value="Kotli" @if($user->district == "Kotli") selected @endif>Kotli</option>
-                                        <option value="Poonch" @if($user->district == "Poonch") selected @endif>Poonch</option>
-                                        <option value="Bagh" @if($user->district == "Bagh") selected @endif>Bagh</option>
-                                        <option value="Haveli" @if($user->district == "Haveli") selected @endif>Haveli</option>
-                                        <option value="Sudhanoti" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>
-                                        <option value="Refugee" @if($user->district == "Refugee") selected @endif>Refugee</option>
+{{--                                        <option value="Kotli" @if($user->district == "Kotli") selected @endif>Kotli</option>--}}
+{{--                                        <option value="Poonch" @if($user->district == "Poonch") selected @endif>Poonch</option>--}}
+{{--                                        <option value="Bagh" @if($user->district == "Bagh") selected @endif>Bagh</option>--}}
+{{--                                        <option value="Haveli" @if($user->district == "Haveli") selected @endif>Haveli</option>--}}
+{{--                                        <option value="Sudhanoti" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>--}}
+{{--                                        <option value="Refugee" @if($user->district == "Refugee") selected @endif>Refugee</option>--}}
                                     </select>
                                 </div>
 
@@ -192,7 +192,7 @@
                         <x-validation-errors class="ml-4 mt-4"/>
                         You have successfully submitted your application to HRMD of The Bank of Azad Jammu & Kashmir. <br>
                         Your Application No is: {{ $user->id }}<br>
-{{--                        Status: @if(!empty($user->latestStatus)) <span class="text-red-600">{{ $user->latestStatus->status }}</span> @endif--}}
+                        {{--                        Status: @if(!empty($user->latestStatus)) <span class="text-red-600">{{ $user->latestStatus->status }}</span> @endif--}}
 
 
                         <br>
@@ -324,57 +324,57 @@
             });
 
 
-        document.getElementById('cnic_front').addEventListener('change', function() {
-            const file = this.files[0]; // Get the first file in the input
-            if (file) { // Check if any file is selected
-                const fileSize = file.size / 1024; // Get file size in KB
-                if (fileSize > 512) { // Check if the file size is greater than 512 KB
-                    alert('The file size must be less than 512 KB');
-                    this.value = ''; // Clear the selected file
+            document.getElementById('cnic_front').addEventListener('change', function() {
+                const file = this.files[0]; // Get the first file in the input
+                if (file) { // Check if any file is selected
+                    const fileSize = file.size / 1024; // Get file size in KB
+                    if (fileSize > 512) { // Check if the file size is greater than 512 KB
+                        alert('The file size must be less than 512 KB');
+                        this.value = ''; // Clear the selected file
+                    }
                 }
-            }
-        });
+            });
 
 
-        document.getElementById('cnic_back').addEventListener('change', function() {
-            const file = this.files[0]; // Get the first file in the input
-            if (file) { // Check if any file is selected
-                const fileSize = file.size / 1024; // Get file size in KB
-                if (fileSize > 512) { // Check if the file size is greater than 512 KB
-                    alert('The file size must be less than 512 KB');
-                    this.value = ''; // Clear the selected file
+            document.getElementById('cnic_back').addEventListener('change', function() {
+                const file = this.files[0]; // Get the first file in the input
+                if (file) { // Check if any file is selected
+                    const fileSize = file.size / 1024; // Get file size in KB
+                    if (fileSize > 512) { // Check if the file size is greater than 512 KB
+                        alert('The file size must be less than 512 KB');
+                        this.value = ''; // Clear the selected file
+                    }
                 }
-            }
-        });
+            });
 
 
-        document.getElementById('profile_pic_1').addEventListener('change', function() {
-            const file = this.files[0]; // Get the first file in the input
-            if (file) { // Check if any file is selected
-                const fileSize = file.size / 1024; // Get file size in KB
-                if (fileSize > 512) { // Check if the file size is greater than 512 KB
-                    alert('The file size must be less than 512 KB');
-                    this.value = ''; // Clear the selected file
+            document.getElementById('profile_pic_1').addEventListener('change', function() {
+                const file = this.files[0]; // Get the first file in the input
+                if (file) { // Check if any file is selected
+                    const fileSize = file.size / 1024; // Get file size in KB
+                    if (fileSize > 512) { // Check if the file size is greater than 512 KB
+                        alert('The file size must be less than 512 KB');
+                        this.value = ''; // Clear the selected file
+                    }
                 }
-            }
-        });
+            });
 
         </script>
         @role('Super-Admin|admin')
         <script>
             var options = {
-                   series: [@foreach($district_wise as $key => $value)
-                {{ $value }},
-            @endforeach],
-                   chart: {
+                series: [@foreach($district_wise as $key => $value)
+                    {{ $value }},
+                    @endforeach],
+                chart: {
                     width: '100%',
                     height: '400px',
                     type: 'pie',
-                 },
-                  legend: {
+                },
+                legend: {
                     position: 'right',
                 },
-                    title: {
+                title: {
                     text: 'AJK District Wise',
                     align: 'center',
                     margin: 0,
@@ -388,72 +388,72 @@
                         color:  '#263238'
                     },
                 },
-                 labels: [@foreach($district_wise as $key => $value)
-                '{{ $key }}',
-            @endforeach],
-                 responsive: [{
-                   breakpoint: 480,
-                   options: {
-                     chart: {
-                       width: 200
-                     },
-                     legend: {
-                       position: 'bottom'
-                     }
-                   }
-                 }]
-                 };
+                labels: [@foreach($district_wise as $key => $value)
+                    '{{ $key }}',
+                    @endforeach],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
 
-                 var chart = new ApexCharts(document.querySelector("#chart"), options);
-                 chart.render();
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
 
 
             // chart 2
 
             var options_two = {
-               series: [@foreach($gender_wise as $key => $value)
-                {{ $value }},
-            @endforeach],
-               chart: {
-                width: '100%',
-                height: '400px',
-                type: 'pie',
-             },
-              legend: {
-                position: 'right',
-            },
-                title: {
-                text: 'Gender Wise Applied',
-                align: 'center',
-                margin: 0,
-                offsetX: 0,
-                offsetY: 0,
-                floating: false,
-                style: {
-                    fontSize:  '16px',
-                    fontWeight:  'bold',
-                    fontFamily:  undefined,
-                    color:  '#263238'
+                series: [@foreach($gender_wise as $key => $value)
+                    {{ $value }},
+                    @endforeach],
+                chart: {
+                    width: '100%',
+                    height: '400px',
+                    type: 'pie',
                 },
-            },
-             labels: [@foreach($gender_wise as $key => $value)
-                '{{ $key }}',
-            @endforeach],
-             responsive: [{
-               breakpoint: 480,
-               options: {
-                 chart: {
-                   width: 200
-                 },
-                 legend: {
-                   position: 'bottom'
-                 }
-               }
-             }]
-             };
+                legend: {
+                    position: 'right',
+                },
+                title: {
+                    text: 'Gender Wise Applied',
+                    align: 'center',
+                    margin: 0,
+                    offsetX: 0,
+                    offsetY: 0,
+                    floating: false,
+                    style: {
+                        fontSize:  '16px',
+                        fontWeight:  'bold',
+                        fontFamily:  undefined,
+                        color:  '#263238'
+                    },
+                },
+                labels: [@foreach($gender_wise as $key => $value)
+                    '{{ $key }}',
+                    @endforeach],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            };
 
-             var chart_two = new ApexCharts(document.querySelector("#chart_two"), options_two);
-             chart_two.render();
+            var chart_two = new ApexCharts(document.querySelector("#chart_two"), options_two);
+            chart_two.render();
 
 
 
@@ -521,7 +521,7 @@
                 markers: {
                     colors: ['#F44336', '#E91E63', '#9C27B0']
                 },
-                                labels: [ @foreach($finalAgeWiseData as $key => $value) '{{ $key }}', @endforeach ],
+                labels: [ @foreach($finalAgeWiseData as $key => $value) '{{ $key }}', @endforeach ],
                 legend: {
                     position: 'right',
 
@@ -564,68 +564,68 @@
 
 
 
-      var options_subjects = {
-          series: [{
-          name: 'Total Applied',
-          data: [@foreach($degreeCountsFormatted as $key => $value) {{ $value }}, @endforeach  ]
-        }],
-          chart: {
-          type: 'bar',
-          height: 350
-        },
+            var options_subjects = {
+                series: [{
+                    name: 'Total Applied',
+                    data: [@foreach($degreeCountsFormatted as $key => $value) {{ $value }}, @endforeach  ]
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 350
+                },
 
-        title: {
-        text: 'Major Subject Wise Applied',
-        align: 'center',
-        margin: 0,
-        offsetX: 0,
-        offsetY: 0,
-        floating: false,
-        style: {
-            fontSize:  '16px',
-            fontWeight:  'bold',
-            fontFamily:  undefined,
-            color:  '#263238'
-        },
-    },
+                title: {
+                    text: 'Major Subject Wise Applied',
+                    align: 'center',
+                    margin: 0,
+                    offsetX: 0,
+                    offsetY: 0,
+                    floating: false,
+                    style: {
+                        fontSize:  '16px',
+                        fontWeight:  'bold',
+                        fontFamily:  undefined,
+                        color:  '#263238'
+                    },
+                },
 
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            endingShape: 'rounded'
-          },
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ['transparent']
-        },
-        xaxis: {
-          categories: [@foreach($degreeCountsFormatted as $key => $value) '{{ $key }}', @endforeach],
-        },
-        yaxis: {
-          title: {
-            text: 'Total (Count)'
-          }
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return "" + val + ""
-            }
-          }
-        }
-        };
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: [@foreach($degreeCountsFormatted as $key => $value) '{{ $key }}', @endforeach],
+                },
+                yaxis: {
+                    title: {
+                        text: 'Total (Count)'
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (val) {
+                            return "" + val + ""
+                        }
+                    }
+                }
+            };
 
-        var chart_options_subjects = new ApexCharts(document.querySelector("#chart_subjects"), options_subjects);
-        chart_options_subjects.render();
+            var chart_options_subjects = new ApexCharts(document.querySelector("#chart_subjects"), options_subjects);
+            chart_options_subjects.render();
 
 
         </script>

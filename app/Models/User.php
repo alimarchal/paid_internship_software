@@ -81,6 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'start_test_time',
         'end_test_time',
         'profile_status',
+        'batch_no',
         'status',
     ];
 

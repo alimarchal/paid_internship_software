@@ -24,6 +24,10 @@
                             <x-nav-link href="{{ route('report.call-letters') }}" :active="request()->routeIs('report.call-letters')">
                                 {{ __('Call Letters') }}
                             </x-nav-link>
+
+                            <x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
+                                {{ __('Result') }}
+                            </x-nav-link>
                         @endif
                     @endif
 
@@ -170,6 +174,19 @@
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+
+            @if(Auth::user()->hasRole('Intern'))
+                @if(Auth::user()->status == "Shortlisted")
+                    <x-responsive-nav-link  href="{{ route('report.call-letters') }}" :active="request()->routeIs('report.call-letters')">
+                        {{ __('Call Letters') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
+                        {{ __('Result') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
@@ -192,6 +209,10 @@
                 <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+
+
+
+
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                     <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">

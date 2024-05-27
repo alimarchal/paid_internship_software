@@ -101,165 +101,315 @@
                 <div class="pb-4 lg:pb-4 bg-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700 print:border-none">
                     <div class="bg-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:via-transparent print:border-none print:text-black ">
 
-                        <table style="border: none;">
-                            <tr style="border: none;">
-                                <td style=" width: 20%; border:none;">
-                                    <div style="margin: auto;">
-                                        <img src="{{ Storage::url('logo.png') }}" alt="Bank Logo Picture" style="margin: auto">
-                                    </div>
-                                </td>
-                                <td style="width: 60%; border: none;">
-                                    <p class="text-center font-bold uppercase " style=" font-size: 13px;">
-                                        The Bank of Azad Jammu & Kashmir
-                                    </p>
-                                    <p class="text-center capitalize font-extrabold text-black" style="font-size: 12px;">
-                                        Human Resource Management Division, Head Office, Muzaffarabad
-                                    <p class="text-center capitalize font-extrabold text-black" style="font-size: 12px;">Phone Office:
-                                        +92-5822-920532
-                                    </p>
-                                    <p class="text-center font-extrabold text-black" style="font-size: 12px;">
-                                        E-Mail: hrd@bankajk.com
-                                    </p>
-                                    <p class="text-center font-extrabold capitalize underline " style="font-size: 14px;">
-                                        Paid Internship Portal Result
-                                    </p>
-                                </td>
-                                <td style="width: 20%; text-align: center;border: none;">
 
-                                    <div style="float: right; margin-right: 10%;">
-                                        {{--                                        @php--}}
-                                        {{--                                            $test_report_data = "Name: " . $candidates->name . " \nRoll No: " .  $candidates->id . "\nCNIC:" . $candidates->cnic_number;--}}
-                                        {{--                                        @endphp--}}
-                                        {{--                                        {!! DNS2D::getBarcodeSVG($test_report_data, 'QRCODE',3,3) !!}--}}
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <hr>
-                        <table class="mt-2">
-                            <thead>
-                            <tr style="font-weight: bold; text-align: center;">
-                                <td>ID</td>
-                                <td>IAN</td>
-                                <td>Name</td>
-                                <td>Father / Husband</td>
-                                <td>District</td>
-                                <td>Domicile</td>
-                                <td>Attendance</td>
-                                <td>SAQ</td>
-                                <td>Attempt Question</td>
-                                <td>Correct</td>
-                                <td>In-Correct</td>
-                                <td>%</td>
-                            </tr>
-                            </thead>
-                            @foreach($users as $user)
-                                @php
-                                    $check = \App\Models\RandomUserQuestion::where('user_id', $user->id)->first();
-                                    $result_att = null;
-                                    if (!empty($check)) {
-                                        $result_att = "P";
-
-                                    } else {
-                                        $result_att = "A";
-                                    }
-
-
-                                @endphp
-
-                                <tr style="text-align: center; font-size: 12px;">
-                                    <td class="px-2">{{ $loop->iteration }}</td>
-                                    <td class="px-2">{{ $user->id }}</td>
-                                    <td class="px-2" style="text-align: left;"> {{ $user->gender == 'Male' ? 'Mr.' : 'Ms.' }} {{ $user->name }}</td>
-                                    <td class="px-2" style="text-align: left;"> {{ $user->fathers_name }}</td>
-                                    <td class="px-2"> {{ $user->district }}</td>
-                                    <td class="px-2"> {{ $user->district_of_domicile }}</td>
-                                    <td class="px-2">
-                                        {{ $result_att }}
+                        @if(Auth::user()->email == "dh_hrd@bankajk.com")
+                            <table style="border: none;">
+                                <tr style="border: none;">
+                                    <td style=" width: 20%; border:none;">
+                                        <div style="margin: auto;">
+                                            <img src="{{ Storage::url('logo.png') }}" alt="Bank Logo Picture" style="margin: auto">
+                                        </div>
                                     </td>
-                                    <td class="px-2">
-                                        @if($result_att == "P")
-                                            {{ \App\Models\RandomUserQuestion::where('user_id', $user->id)->count() }}
-                                        @else
-                                            N/A
-                                        @endif
+                                    <td style="width: 60%; border: none;">
+                                        <p class="text-center font-bold uppercase " style=" font-size: 13px;">
+                                            The Bank of Azad Jammu & Kashmir
+                                        </p>
+                                        <p class="text-center capitalize font-extrabold text-black" style="font-size: 12px;">
+                                            Human Resource Management Division, Head Office, Muzaffarabad
+                                        <p class="text-center capitalize font-extrabold text-black" style="font-size: 12px;">Phone Office:
+                                            +92-5822-920532
+                                        </p>
+                                        <p class="text-center font-extrabold text-black" style="font-size: 12px;">
+                                            E-Mail: hrd@bankajk.com
+                                        </p>
+                                        <p class="text-center font-extrabold capitalize underline " style="font-size: 14px;">
+                                            Paid Internship Portal Result
+                                        </p>
                                     </td>
-                                    <td class="px-2">
-                                        @if($result_att == "P")
-                                            {{ \App\Models\RandomUserQuestion::where('user_id', $user->id)->sum('is_answered') }}
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
-                                    <td class="px-2">
-                                        @if($result_att == "P")
-                                            {{ \App\Models\RandomUserQuestion::where('user_id', $user->id)->sum('is_correct') }}
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
-                                    <td class="px-2">
-                                        @if($result_att == "P")
-                                            {{ \App\Models\RandomUserQuestion::where('user_id', $user->id)->where('is_correct',0)->count() }}
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
-                                    <td class="px-2">
-                                        @if($result_att == "P")
-                                            {{ round( (\App\Models\RandomUserQuestion::where('user_id', $user->id)->sum('is_correct') / \App\Models\RandomUserQuestion::where('user_id', $user->id)->count('id')) * 100, 2 ) }}%
-                                        @else
-                                            N/A
-                                        @endif
+                                    <td style="width: 20%; text-align: center;border: none;">
+
+                                        <div style="float: right; margin-right: 10%;">
+                                            {{--                                        @php--}}
+                                            {{--                                            $test_report_data = "Name: " . $candidates->name . " \nRoll No: " .  $candidates->id . "\nCNIC:" . $candidates->cnic_number;--}}
+                                            {{--                                        @endphp--}}
+                                            {{--                                        {!! DNS2D::getBarcodeSVG($test_report_data, 'QRCODE',3,3) !!}--}}
+                                        </div>
                                     </td>
                                 </tr>
+                            </table>
 
-                            @endforeach
-                        </table>
-
-                        <div class="break-before-page mb-2">
-                            <!-- Content -->
-                        </div>
-
-
-                        <br>
-
-
-                        <h1 class="text-2xl text-center">Merit List</h1>
-                        <table class="mt-2">
-                            <thead>
-                            <tr style="font-weight: bold; text-align: center;">
-                                <td>ID</td>
-                                <td>IAN</td>
-                                <td>Name</td>
-                                <td>Father / Husband</td>
-                                <td>District</td>
-                                <td>Domicile</td>
-                                <td>System Assigned Questions</td>
-                                <td>Attempt Question</td>
-                                <td>Correct Answers</td>
-                            </tr>
-                            </thead>
-
-                            @foreach($results as $result)
-                                <tr style="text-align: center; font-size: 12px;">
-                                    <td class="px-2">{{ $loop->iteration }}</td>
-                                    <td class="px-2">{{ $result->user->id }}</td>
-                                    <td class="px-2" style="text-align: left;"> {{ $result->user->gender == 'Male' ? 'Mr.' : 'Ms.' }} {{ $result->user->name }}</td>
-                                    <td class="px-2" style="text-align: left;"> {{ $result->user->fathers_name }}</td>
-                                    <td class="px-2"> {{ $result->user->district }}</td>
-                                    <td class="px-2"> {{ $result->user->district_of_domicile }}</td>
-                                    <td class="px-2">{{ $result->system_assigned_questions }}</td>
-                                    <td class="px-2">{{ $result->attemp_questions }}</td>
-                                    <td class="px-2">{{ $result->correct_answer }}</td>
+                            <hr>
+                            <table class="mt-2">
+                                <thead>
+                                <tr style="font-weight: bold; text-align: center;">
+                                    <td>ID</td>
+                                    <td>IAN</td>
+                                    <td>Name</td>
+                                    <td>Father / Husband</td>
+                                    <td>District</td>
+                                    <td>Domicile</td>
+                                    <td>Attendance</td>
+                                    <td>SAQ</td>
+                                    <td>Attempt Question</td>
+                                    <td>Correct</td>
+                                    <td>In-Correct</td>
+                                    <td>%</td>
                                 </tr>
-                            @endforeach
-                        </table>
+                                </thead>
+                                @foreach($users as $user)
+                                    @php
+                                        $check = \App\Models\RandomUserQuestion::where('user_id', $user->id)->first();
+                                        $result_att = null;
+                                        if (!empty($check)) {
+                                            $result_att = "P";
 
-                        <div class="break-before-page mb-2">
-                            <!-- Content -->
-                        </div>
+                                        } else {
+                                            $result_att = "A";
+                                        }
+
+
+                                    @endphp
+
+                                    <tr style="text-align: center; font-size: 12px;">
+                                        <td class="px-2">{{ $loop->iteration }}</td>
+                                        <td class="px-2">{{ $user->id }}</td>
+                                        <td class="px-2" style="text-align: left;"> {{ $user->gender == 'Male' ? 'Mr.' : 'Ms.' }} {{ $user->name }}</td>
+                                        <td class="px-2" style="text-align: left;"> {{ $user->fathers_name }}</td>
+                                        <td class="px-2"> {{ $user->district }}</td>
+                                        <td class="px-2"> {{ $user->district_of_domicile }}</td>
+                                        <td class="px-2">
+                                            {{ $result_att }}
+                                        </td>
+                                        <td class="px-2">
+                                            @if($result_att == "P")
+                                                {{ \App\Models\RandomUserQuestion::where('user_id', $user->id)->count() }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                        <td class="px-2">
+                                            @if($result_att == "P")
+                                                {{ \App\Models\RandomUserQuestion::where('user_id', $user->id)->sum('is_answered') }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                        <td class="px-2">
+                                            @if($result_att == "P")
+                                                {{ \App\Models\RandomUserQuestion::where('user_id', $user->id)->sum('is_correct') }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                        <td class="px-2">
+                                            @if($result_att == "P")
+                                                {{ \App\Models\RandomUserQuestion::where('user_id', $user->id)->where('is_correct',0)->count() }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                        <td class="px-2">
+                                            @if($result_att == "P")
+                                                {{ round( (\App\Models\RandomUserQuestion::where('user_id', $user->id)->sum('is_correct') / \App\Models\RandomUserQuestion::where('user_id', $user->id)->count('id')) * 100, 2 ) }}%
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                    </tr>
+
+                                @endforeach
+                            </table>
+
+                            <div class="break-before-page mb-2">
+                                <!-- Content -->
+                            </div>
+
+
+                            <br>
+
+
+                            <h1 class="text-2xl text-center">Merit List</h1>
+                            <table class="mt-2">
+                                <thead>
+                                <tr style="font-weight: bold; text-align: center;">
+                                    <td>ID</td>
+                                    <td>IAN</td>
+                                    <td>Name</td>
+                                    <td>Father / Husband</td>
+                                    <td>District</td>
+                                    <td>Domicile</td>
+                                    <td>System Assigned Questions</td>
+                                    <td>Attempt Question</td>
+                                    <td>Correct Answers</td>
+                                </tr>
+                                </thead>
+
+                                @foreach($results as $result)
+                                    <tr style="text-align: center; font-size: 12px;">
+                                        <td class="px-2">{{ $loop->iteration }}</td>
+                                        <td class="px-2">{{ $result->user->id }}</td>
+                                        <td class="px-2" style="text-align: left;"> {{ $result->user->gender == 'Male' ? 'Mr.' : 'Ms.' }} {{ $result->user->name }}</td>
+                                        <td class="px-2" style="text-align: left;"> {{ $result->user->fathers_name }}</td>
+                                        <td class="px-2"> {{ $result->user->district }}</td>
+                                        <td class="px-2"> {{ $result->user->district_of_domicile }}</td>
+                                        <td class="px-2">{{ $result->system_assigned_questions }}</td>
+                                        <td class="px-2">{{ $result->attemp_questions }}</td>
+                                        <td class="px-2">{{ $result->correct_answer }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+
+                            <div class="break-before-page mb-2">
+                                <!-- Content -->
+                            </div>
+                        @endif
+
+
+
+
+                        @role('Intern')
+
+                                @foreach($cdt as $candidates)
+                                    <table style="border: none;">
+                                        <tr>
+                                            <td style="width: 20%;border: none;">
+                                                <div style="margin: auto;">
+                                                    <img src="{{ Storage::url('logo.png') }}" alt="Bank Logo Picture" style="margin: auto">
+                                                </div>
+                                            </td>
+                                            <td style="width: 60%;border: none;">
+                                                <p class="text-center font-bold uppercase " style=" font-size: 13px;">
+                                                    The Bank of Azad Jammu & Kashmir
+                                                </p>
+                                                <p class="text-center capitalize font-extrabold text-black" style="font-size: 12px;">
+                                                    Human Resource Management Division, Head Office, Muzaffarabad
+                                                <p class="text-center capitalize font-extrabold text-black" style="font-size: 12px;">Phone Office:
+                                                    +92-5822-920532
+                                                </p>
+                                                <p class="text-center font-extrabold text-black" style="font-size: 12px;">
+                                                    E-Mail: hrd@bankajk.com
+                                                </p>
+                                                <p class="text-center font-extrabold capitalize " style="font-size: 14px;">
+                                                    (Result Card)
+                                                </p>
+                                            </td>
+                                            <td style="width: 20%; text-align: center;;border: none;">
+
+                                                <div style="float: right; margin-right: 10%;;border: none;">
+                                                    @php
+                                                        $test_report_data = "Name: " . $candidates->name . " \nRoll No: " .  $candidates->id . "\nCNIC:" . $candidates->cnic_number;
+                                                    @endphp
+                                                    {!! DNS2D::getBarcodeSVG($test_report_data, 'QRCODE',3,3) !!}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <hr>
+                                    <table class="mt-4" style="border: none;">
+                                        <tr>
+                                            <td style="width: 80%;border: none;" >
+                                                <p class="text-left font-bold px-2 capitalize" style="font-size: 14px!important;">
+                                                    <span class="font-extrabold">Internee Application No: {{ $candidates->id }}</span><br>
+                                                    <span class="font-extrabold uppercase">CNIC: {{ $candidates->cnic_number }}</span>
+                                                </p>
+                                                <p class="text-left font-bold px-2 capitalize" style="font-size: 14px!important;">
+                                                    Name:
+                                                    {{ $candidates->gender == 'Male' ? 'Mr.' : 'Ms.' }} {{ $candidates->name }}
+                                                    <br>
+                                                    Father / Husband Name: {{ $candidates->fathers_name }}
+                                                </p>
+
+                                                <p class="text-left font-bold px-2 capitalize" style="font-size: 14px!important;">
+                                        <span class="capitalize">Gender / Age:
+                                            {{ $candidates->gender }}</span> - {{ \Carbon\Carbon::parse($candidates->date_of_birth)->format('d-M-Y')  }} ({{ \Carbon\Carbon::parse($candidates->date_of_birth)->diff(\Carbon\Carbon::now())->format('%yy') }})
+                                                    <br>
+
+
+                                                </p>
+
+
+                                                <p class="text-left font-bold px-2  capitalize">
+                                                    {{--                                            Test Center: {{ $candidates->test_center }}<br>--}}
+                                                    {{--                                            Reporting Time: {{ $candidates->reporting_time }} (PST)<br>--}}
+                                                    {{--                                            Test Date: {{ \Carbon\Carbon::parse($candidates->test_date)->format('l, d F, Y') }} <br>--}}
+                                                    {{--                                            Duration: 90 Minutes--}}
+                                                    {{--                                        Address:--}}
+                                                    {{--                                        {{ $candidates->mailing_address }}--}}
+                                                    {{--                                        <br> District: {{ $candidates->district }}--}}
+                                                </p>
+
+                                            </td>
+                                            <td style="width: 20%; text-align: center;;border: none;">
+                                                <div style="margin: auto;">
+
+                                                    @if ($candidates->profile_photo_path)
+                                                        <img src="{{ Storage::url($candidates->profile_photo_path) }}" alt="Internee Picture" class="rounded-lg" style="width: 1in; height: 1in; border: 1px solid #000; margin: auto">
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+
+
+                                    <div class="text-center" style="font-size: 12px!important;">
+                            <span class="uppercase" style="font-weight: bold;">
+                                Subject:
+                                <span class="underline">One Paper Test (MCQs) Result</span>
+                            </span>
+                                    </div>
+                                    <div class="p-2 mx-auto">
+                                        <div class="mb-2">
+                                            <p class="text-sm text-black"  style="font-size: 12px!important;">
+
+                                                @if($results->isNotEmpty())
+                                                <h1 class="text-2xl text-center"></h1>
+                                                <table class="mt-2">
+                                                    <thead>
+                                                    <tr style="font-weight: bold; text-align: center;">
+                                                        <td>Automatic System Assigned Questions</td>
+                                                        <td>Attempt Question</td>
+                                                        <td>Correct Answers</td>
+                                                        <td>Result Percentage</td>
+                                                    </tr>
+                                                    </thead>
+
+                                                    @foreach($results as $result)
+                                                        <tr style="text-align: center; font-size: 16px;">
+                                                            <td class="px-2">{{ $result->system_assigned_questions }}</td>
+                                                            <td class="px-2">{{ $result->attemp_questions }}</td>
+                                                            <td class="px-2">{{ $result->correct_answer }}</td>
+                                                            <td class="px-2">{{ round(($result->correct_answer/$result->system_assigned_questions*100),2) }}%</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </table>
+                                                @else
+                                                <span class="text-2xl text-red-500 font-extrabold">Dear Candidate,</span><br>
+                                                    <p class=" text-center"><span class="text-2xl text-red-500  font-extrabold">You were not present for the test; you were marked as absent.</span></p>
+                                                @endif
+                                            </p>
+                                        </div>
+                                        <div class="mb-2 text-black">
+
+                                            <p class="text-sm text-black text-center">
+                                                <strong>Please note that this is a computer-generated document and does not require any signature.</strong>
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="break-before-page mb-2">
+                                        <!-- Content -->
+                                    </div>
+
+                                @endforeach
+
+
+                            @endrole
+
 
 
                     </div>

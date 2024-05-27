@@ -3,7 +3,11 @@
         <x-slot name="logo">
             <x-authentication-card-logo/>
         </x-slot>
-        <h1 class="text-lg text-center font-bold">BAJK - Paid Internship Portal</h1>
+        <h1 class="text-lg text-center font-bold">BAJK - Paid Internship Portal<br>
+            <!--<span style="color:red; text-align:center;font-weight: bold;">*** The internship application deadline has been extended to 10th March, 2024 ***</span>-->
+            <span style="color:red; text-align:center;font-weight: bold;">***  Eligibility is limited to <span style="font-weight: bold;">Mirpur/Bhimber</span> domicile holders Deadline June 10, 2024. ***</span>
+
+        </h1>
 
         <x-validation-errors class="mb-4"/>
 

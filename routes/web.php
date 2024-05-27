@@ -30,16 +30,21 @@ Route::get('/', function () {
 });
 
 
-//Route::get('/shortlisted', function () {
-//    foreach (User::where('profile_status',1)->where('status','Shortlisted')->where('id',1)->get() as $user)
-//    {
-////        Mail::to($user->email)->later(now()->addSeconds(20), new \App\Mail\ShortListed());
+Route::get('/shortlisted', function () {
+    $users = User::where('profile_status',1)->where('status','Shortlisted')->get();
+    foreach ($users as $user)
+    {
+
+//        Mail::to($user->email)->later(now()->addSeconds(20), new \App\Mail\ShortListed());
 //        \App\Jobs\SendShortListedJob::dispatch($user)->delay(now()->addSeconds(10));
-//        //send(new \App\Mail\ShortListed());
-//    }
-//
-//    echo "Mail Send";
-//});
+        \App\Jobs\ResultAnnounced::dispatch($user)->delay(now()->addSeconds(10));
+        //send(new \App\Mail\ShortListed());
+    }
+
+    echo "Mail Send";
+});
+
+
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
     Route::get('/dashboard', function () {

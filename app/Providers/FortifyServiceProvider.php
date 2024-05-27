@@ -29,7 +29,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $deadline = Carbon::create(2024, 3, 10, 23, 59, 59);
+        $deadline = Carbon::create(2024, 6, 10, 23, 59, 59);
         $now = Carbon::now();
 
         if ($now->greaterThan($deadline)) {

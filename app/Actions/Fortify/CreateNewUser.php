@@ -28,8 +28,8 @@ class CreateNewUser implements CreatesNewUsers
             'date_of_birth' => [
                 'required',
                 'date', // Ensure that the input is a valid date
-                'before_or_equal:' . '2006-03-01', // Must be 18 years or older
-                'after_or_equal:' .  '1997-03-01',  // Must be less than 27 years
+                'before_or_equal:' . '2006-06-11', // Must be 18 years or older
+                'after_or_equal:' .  '1997-06-11',  // Must be less than 27 years
             ],
             'nationality' => [
                 'required',
@@ -51,6 +51,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'date_of_birth' => $input['date_of_birth'],
             'password' => Hash::make($input['password']),
+            'batch_no' => 'Batch-02',
         ]);
 
         $role = Role::find(1);

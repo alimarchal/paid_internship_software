@@ -43,6 +43,8 @@ return new class extends Migration
             $table->boolean('start_test')->default(0);
             $table->timestamp('start_test_time')->nullable();
             $table->timestamp('end_test_time')->nullable();
+            $table->boolean('profile_status')->default(0);
+            $table->enum('batch_no',['Batch-01', 'Batch-02'])->default('Batch-01');
             $table->enum('status',['Pending','Shortlisted','Rejected'])->default('Pending');
             $table->timestamps();
         });

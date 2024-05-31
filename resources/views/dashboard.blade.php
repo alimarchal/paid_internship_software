@@ -9,7 +9,33 @@
         </h2>
     </x-slot>
 
-    <div class="py-3">
+        @role('Super-Admin|admin')
+            <div class="max-w-8xl mx-auto mt-4 px-4 sm:px-2 lg:px-8 print:hidden">
+            <div class="rounded-xl p-4 bg-white shadow-lg">
+                <form method="GET" action="{{ route('dashboard') }}">
+                    <div class="mt-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Gender -->
+                        <div>
+                            <select name="batch_no" id="batch_no" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
+                                <option value="">Select a Batch No</option>
+                                <option value="Batch-01">Batch-01</option>
+                                <option value="Batch-02">Batch-02</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <x-button class="bg-indigo-500 text-white mt-2">
+                                {{ __('Apply Filters') }}
+                            </x-button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        @endrole
+
+        <div class="py-3">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
 
 
@@ -220,7 +246,7 @@
                             <div class="grid grid-cols-3 gap-1">
                                 <div class="col-span-2">
                                     <div class="text-3xl font-bold leading-8">
-                                        {{ App\Models\User::where('id','>',3)->where('profile_status', 0)->count(); }}
+                                        {{ $profile_in_process }}
                                     </div>
                                     <div class="mt-1 text-base font-extrabold text-black">
                                         Candidates In-Process
@@ -237,7 +263,7 @@
                             <div class="grid grid-cols-3 gap-1">
                                 <div class="col-span-2">
                                     <div class="text-3xl font-bold leading-8">
-                                        {{ App\Models\User::where('profile_status', 1)->count(); }}
+                                        {{$profile_applied }}
                                     </div>
                                     <div class="mt-1 text-base font-extrabold text-black">
                                         Total Candidates Applied
@@ -254,7 +280,7 @@
                             <div class="grid grid-cols-3 gap-1">
                                 <div class="col-span-2">
                                     <div class="text-3xl font-bold leading-8">
-                                        {{ App\Models\User::where('id','>',3)->count(); }}
+                                        {{ $profile_total }}
                                     </div>
                                     <div class="mt-1 text-base font-extrabold text-black">
                                         Total Candidates

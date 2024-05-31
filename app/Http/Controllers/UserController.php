@@ -32,6 +32,7 @@ class UserController extends Controller
                     AllowedFilter::exact('district_of_domicile'),
                     AllowedFilter::exact('cnic_number'),
                     AllowedFilter::exact('profile_status'),
+                    AllowedFilter::exact('batch_no'),
                     AllowedFilter::exact('status'),
                     AllowedFilter::exact('contact_number'),
                     AllowedFilter::exact('education_degrees_search.major_subject'),

@@ -30,19 +30,19 @@ Route::get('/', function () {
 });
 
 
-Route::get('/shortlisted', function () {
-    $users = User::where('profile_status',1)->where('status','Shortlisted')->get();
-    foreach ($users as $user)
-    {
-
-//        Mail::to($user->email)->later(now()->addSeconds(20), new \App\Mail\ShortListed());
-//        \App\Jobs\SendShortListedJob::dispatch($user)->delay(now()->addSeconds(10));
-        \App\Jobs\ResultAnnounced::dispatch($user)->delay(now()->addSeconds(10));
-        //send(new \App\Mail\ShortListed());
-    }
-
-    echo "Mail Send";
-});
+//Route::get('/shortlisted', function () {
+//    $users = User::where('profile_status',1)->where('status','Shortlisted')->get();
+//    foreach ($users as $user)
+//    {
+//
+////        Mail::to($user->email)->later(now()->addSeconds(20), new \App\Mail\ShortListed());
+////        \App\Jobs\SendShortListedJob::dispatch($user)->delay(now()->addSeconds(10));
+//        \App\Jobs\ResultAnnounced::dispatch($user)->delay(now()->addSeconds(10));
+//        //send(new \App\Mail\ShortListed());
+//    }
+//
+//    echo "Mail Send";
+//});
 
 
 

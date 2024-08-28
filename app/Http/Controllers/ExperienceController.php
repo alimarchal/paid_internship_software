@@ -31,12 +31,12 @@ class ExperienceController extends Controller
 
 
 
-        $deadline = Carbon::create(2024, 6, 10, 23, 59, 59);
+        $deadline = Carbon::create(2024, 9, 15, 23, 59, 59);
         $now = Carbon::now();
 
         if ($now->greaterThan($deadline)) {
 //            return back()->with('error', 'The internship deadline is now complete. You cannot submit your application as the deadline was 27 Feb 2024 at 23:59:59 as per advertised.');
-            return back()->with('error', 'The internship deadline is now complete. You cannot submit your application as the deadline was 10 June 2024 at 23:59:59 as per advertised.');
+            return back()->with('error', 'The internship deadline is now complete. You cannot submit your application as the deadline was ' . Carbon::parse($deadline)->format('d-m-Y') .'  at 23:59:59 as per advertised.');
         }
 
         $found_degree = 0;
@@ -54,7 +54,7 @@ class ExperienceController extends Controller
         $eligibleDegreeFound = $user->education_degrees->contains(function ($degree) use ($eligibleMajors) {
             $isEligibleLevel = in_array($degree->education_level, ['Bachelor (16 Years) Degree', 'Master (16 Years) Degree']);
             $isEligibleMajor = in_array($degree->major_subject, $eligibleMajors);
-            $hasRequiredMarks = round($degree->percentage_marks) >= 70.00;
+            $hasRequiredMarks = round($degree->percentage_marks) >= 60.00;
 
             return $isEligibleLevel && $isEligibleMajor && $hasRequiredMarks;
         });
@@ -62,7 +62,7 @@ class ExperienceController extends Controller
         if (!$eligibleDegreeFound) {
             session()->flash(
                 'error',
-                'You are not eligible to submit the application as you do not have 70% marks in your BS Degree. Please view Eligibility Criteria: Eligible candidates must have completed a minimum (4) years Bachelor degree Program in the disciplines of Economics, Business Administration, Accounting, Finance, Commerce, Computer Sciences & IT. Must have a minimum of 70% marks where the percentage system applies or a minimum of 3.00 out of 4.00 or 4.00 out of 5.00 CGPA, where the GPA system is applicable. Candidates must meet these requirements at the time of applying for the program. Students awaiting results to meet the eligibility criteria are ineligible. The maximum age limit is 27 years as of June 10, 2024.'
+                'You are not eligible to submit the application as you do not have 60% marks in your BS Degree. Please view Eligibility Criteria: Eligible candidates must have completed a minimum (4) years Bachelor degree Program in the disciplines of Economics, Business Administration, Accounting, Finance, Commerce, Computer Sciences & IT. Must have a minimum of 60% marks where the percentage system applies or a minimum of 2.4 out of 4.00 or 3.00 out of 5.00 CGPA, where the GPA system is applicable. Candidates must meet these requirements at the time of applying for the program. Students awaiting results to meet the eligibility criteria are ineligible. The maximum age limit is 35 years as of  ' . Carbon::parse($deadline)->format('d-M-Y')
             );
             return to_route('education.edit', $user->id);
         }

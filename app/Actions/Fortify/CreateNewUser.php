@@ -29,7 +29,7 @@ class CreateNewUser implements CreatesNewUsers
                 'required',
                 'date', // Ensure that the input is a valid date
                 'before_or_equal:' . '2006-06-11', // Must be 18 years or older
-                'after_or_equal:' .  '1997-06-01',  // Must be less than 27 years
+                'after_or_equal:' .  '1989-09-16',  // Must be less than 35 years
             ],
             'nationality' => [
                 'required',

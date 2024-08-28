@@ -12,8 +12,8 @@
             <div>
                 <!-- Batch 1-->
                 <!--<span style="color:red; text-align:center;font-weight: bold;"> The internship application deadline has been extended to 10th March, 2024</span>-->
-                <span style="color:red; text-align:center;font-weight: bold;">
-               Eligibility is limited to <span style="font-weight: bold;">Mirpur/Bhimber</span> domicile holders Deadline June 10, 2024.</span>
+{{--                <span style="color:red; text-align:center;font-weight: bold;">--}}
+{{--               Eligibility is limited to <span style="font-weight: bold;">Mirpur/Bhimber</span> domicile holders Deadline June 10, 2024.</span>--}}
                 <x-label for="name" value="{{ __('Your Full Name') }}" />
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             </div>
@@ -52,12 +52,9 @@
             </div>
 
             <div class="mt-2">
-                <x-label for="date_of_birth" class="font-bold" value="{{ __('Date Of Birth (Max 27 Years)') }}" />
-                <x-input id="date_of_birth"  max="2006-06-11" min="1997-06-01"  class="block mt-1 w-full" type="date" name="date_of_birth" :value="old('date_of_birth')" required autocomplete="date_of_birth" />
+                <x-label for="date_of_birth" class="font-bold" value="{{ __('Date Of Birth (Max 35 Years)') }}" />
+                <x-input id="date_of_birth"  max="2006-06-01" min="1989-09-15"  class="block mt-1 w-full" type="date" name="date_of_birth" :value="old('date_of_birth')" required autocomplete="date_of_birth" />
             </div>
-
-
-
 
             <div class="mt-2">
                 <x-label for="password" value="{{ __('Password') }}" />

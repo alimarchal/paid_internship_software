@@ -62,7 +62,7 @@
                                 </div>
                                 <div>
                                     <x-label for="date_of_birth" value="Date of Birth" :required="true"/>
-                                    <x-input id="date_of_birth" required max="2006-03-01" min="1997-03-01" name="date_of_birth" class="block mt-1 w-full" type="date" value="{{ $user->date_of_birth }}"/>
+                                    <x-input id="date_of_birth" required max="2006-03-01" min="1989-09-15" name="date_of_birth" class="block mt-1 w-full" type="date" value="{{ $user->date_of_birth }}"/>
                                 </div>
 
                                 <div>
@@ -101,17 +101,17 @@
                                     <x-label for="district" value="District" :required="true"/>
                                     <select id="district" required name="district" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
                                         <option value="">Select a district</option>
-{{--                                        <option value="Muzaffarabad" @if($user->district == "Muzaffarabad") selected @endif>Muzaffarabad</option>--}}
-{{--                                        <option value="Jhelum Valley" @if($user->district == "Jhelum Valley") selected @endif>Jhelum Valley</option>--}}
-{{--                                        <option value="Neelum" @if($user->district == "Neelum") selected @endif>Neelum</option>--}}
+                                        <option value="Muzaffarabad" @if($user->district == "Muzaffarabad") selected @endif>Muzaffarabad</option>
+                                        <option value="Jhelum Valley" @if($user->district == "Jhelum Valley") selected @endif>Jhelum Valley</option>
+                                        <option value="Neelum" @if($user->district == "Neelum") selected @endif>Neelum</option>
                                         <option value="Mirpur" @if($user->district == "Mirpur") selected @endif>Mirpur</option>
                                         <option value="Bhimber" @if($user->district == "Bhimber") selected @endif>Bhimber</option>
-{{--                                        <option value="Kotli" @if($user->district == "Kotli") selected @endif>Kotli</option>--}}
-{{--                                        <option value="Poonch" @if($user->district == "Poonch") selected @endif>Poonch</option>--}}
-{{--                                        <option value="Bagh" @if($user->district == "Bagh") selected @endif>Bagh</option>--}}
-{{--                                        <option value="Haveli" @if($user->district == "Haveli") selected @endif>Haveli</option>--}}
-{{--                                        <option value="Sudhanoti" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>--}}
-{{--                                        <option value="Refugee" @if($user->district == "Refugee") selected @endif>Refugee</option>--}}
+                                        <option value="Kotli" @if($user->district == "Kotli") selected @endif>Kotli</option>
+                                        <option value="Poonch" @if($user->district == "Poonch") selected @endif>Poonch</option>
+                                        <option value="Bagh" @if($user->district == "Bagh") selected @endif>Bagh</option>
+                                        <option value="Haveli" @if($user->district == "Haveli") selected @endif>Haveli</option>
+                                        <option value="Sudhanoti" @if($user->district == "Sudhanoti") selected @endif>Sudhanoti</option>
+                                        <option value="Refugee" @if($user->district == "Refugee") selected @endif>Refugee</option>
                                     </select>
                                 </div>
 

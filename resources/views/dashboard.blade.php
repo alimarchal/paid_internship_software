@@ -1,7 +1,6 @@
 <x-app-layout>
     @push('custom_headers')
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
     @endpush
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -314,11 +313,6 @@
                         <div class="bg-white rounded-lg shadow-lg p-4" id="service_length_chart">
                         </div>
                     </div>
-
-
-
-
-
 
                 </div>
                 @endrole

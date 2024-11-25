@@ -30,8 +30,8 @@ class SendShortListedJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
-//        Log::info("Dispatching job for user: {$this->user->id}");
+        // Add a sleep to ensure delay between email sends
+        // sleep(1);
         Mail::to($this->user->email)->send(new ShortListed($this->user));
 
     }

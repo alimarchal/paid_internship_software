@@ -71,10 +71,10 @@ class RandomUserQuestionController extends Controller
 //                        }
 
                         // Fetch questions by category with the specified amounts
-                        $english_questions = Question::where('category_id', 4)->inRandomOrder()->take(15)->get();
-                        $general_knowledge_questions = Question::where('category_id', 7)->inRandomOrder()->take(15)->get();
+                        $english_questions = Question::where('category_id', 4)->inRandomOrder()->take(10)->get();
+                        $general_knowledge_questions = Question::where('category_id', 7)->inRandomOrder()->take(10)->get();
                         // Assuming 'other' categories mean every category except for English and General Knowledge
-                        $other_questions = Question::whereNotIn('category_id', [4, 7, 14])->inRandomOrder()->take(70)->get();
+                        $other_questions = Question::whereNotIn('category_id', [4, 7, 14])->inRandomOrder()->take(80)->get();
 
                         // Merge the collections into one
                         $randomQuestions = $english_questions->merge($general_knowledge_questions)->merge($other_questions);

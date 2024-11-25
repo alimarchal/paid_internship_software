@@ -41,9 +41,8 @@
                                 <x-label for="password" value="Password" :required="false"/>
                                 <x-input id="password" name="password" class="block mt-1 w-full" type="password"/>
                             </div>
-
-
-
+                            
+                            
                             <div>
                                 <x-label for="start_test_time" value="Start Test Time" :required="false"/>
                                 <x-input id="start_test_time" name="start_test_time" class="block mt-1 w-full" type="datetime-local" value="{{ $user->start_test_time}}" />
@@ -53,6 +52,7 @@
                                 <x-label for="end_test_time" value="End Test Time" :required="false"/>
                                 <x-input id="end_test_time" name="end_test_time" class="block mt-1 w-full" type="datetime-local" value="{{ $user->end_test_time}}"  />
                             </div>
+
 
 
                         </div>

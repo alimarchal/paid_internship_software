@@ -20,14 +20,14 @@
 
 
                     @if(Auth::user()->hasRole('Intern'))
-                        @if(Auth::user()->status == "Shortlisted")
+                        @if(Auth::user()->status == "Shortlisted" && !empty(Auth::user()->test_center))
                             <x-nav-link href="{{ route('report.call-letters') }}" :active="request()->routeIs('report.call-letters')">
                                 {{ __('Call Letters') }}
                             </x-nav-link>
 
-                            <x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
-                                {{ __('Result') }}
-                            </x-nav-link>
+                            <!--<x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">-->
+                            <!--    {{ __('Result') }}-->
+                            <!--</x-nav-link>-->
                         @endif
                     @endif
 
@@ -42,9 +42,19 @@
 
 
                     @if(Auth::user()->email == "dh_hrd@bankajk.com")
-                    <x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
-                        {{ __('Result') }}
+                        <x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
+                           Result Batch-01
+                        </x-nav-link>
+                    
+                    
+                     <x-nav-link href="{{ route('report.result_batch_two') }}" :active="request()->routeIs('report.result_batch_two')">
+                        Result Batch-02 
                     </x-nav-link>
+                    
+                    
+                    <!--  <x-nav-link href="{{ route('report.result_batch_two_kotli') }}" :active="request()->routeIs('report.result_batch_two_kotli')">-->
+                    <!--    Result Batch-02 (Kotli)-->
+                    <!--</x-nav-link>-->
                     @endif
                     @endrole
                 </div>
@@ -177,14 +187,14 @@
 
 
             @if(Auth::user()->hasRole('Intern'))
-                @if(Auth::user()->status == "Shortlisted")
+                 @if(Auth::user()->status == "Shortlisted" && !empty(Auth::user()->test_center))
                     <x-responsive-nav-link  href="{{ route('report.call-letters') }}" :active="request()->routeIs('report.call-letters')">
                         {{ __('Call Letters') }}
                     </x-responsive-nav-link>
 
-                    <x-responsive-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
-                        {{ __('Result') }}
-                    </x-responsive-nav-link>
+                    <!--<x-responsive-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">-->
+                    <!--    {{ __('Result') }}-->
+                    <!--</x-responsive-nav-link>-->
                 @endif
             @endif
         </div>

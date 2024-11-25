@@ -2,14 +2,14 @@
     @push('custom_headers')
 
 
-        <script src="https://cdn.tiny.cloud/1/izbyerk8x92uls8z2ulnezm5uaudhf41lw0lebop5ba724o5/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-        <script>
-            tinymce.init({
-              selector: 'textarea',
-              plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-              toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-            });
-        </script>
+        <!--<script src="https://cdn.tiny.cloud/1/izbyerk8x92uls8z2ulnezm5uaudhf41lw0lebop5ba724o5/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>-->
+        <!--<script>
+        //     tinymce.init({
+        //       selector: 'textarea',
+        //       plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        //       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        //     });
+        </script> -->
         <style>
             table, td, th {
                 /*border: 1px solid;*/
@@ -419,11 +419,12 @@
                                 </div>
                             </div>
                         </form>
-
-
-                        @if($get_user_questions->isNotEmpty())
-                            <h1 class="text-center font-extrabold">User Paper Questions</h1>
-{{--                            @if(Auth::user()->email == "dh_hrd@bankajk.com")--}}
+                        
+                        
+                          @if($get_user_questions->isNotEmpty())
+                           
+                        @if(Auth::user()->email == "dh_hrd@bankajk.com")
+                                 <h1 class="text-center font-extrabold">User Paper Questions</h1>
                                 <div style="margin: 50px;">
                                 <table class="table-auto w-full border-collapse border border-black" style="font-size: 16px;">
                                     {{--                                <thead>--}}
@@ -441,7 +442,7 @@
                                     @foreach($get_user_questions as $question)
                                         <tr class="border-black">
                                             <td class="border-black border px-4 py-2" >{{ $loop->iteration }}</td>
-                                            <td class="border-black border px-4 py-2" >{!! \App\Models\Question::find($question->question_id)->text !!} {{ $question->question_id }}</td>
+                                            <td class="border-black border px-4 py-2" >{!! \App\Models\Question::find($question->question_id)->text !!} </td>
                                         </tr>
                                         <tr class="border-black">
                                             <td class="border-black border px-4 py-2" colspan="2">
@@ -473,7 +474,7 @@
                                     </tbody>
                                 </table>
                             </div>
-{{--                            @endif--}}
+                        @endif
                         @else($get_user_questions->isEmpty())
                             @if($user->exam_taken == 1) <h1 class="text-center font-extrabold">User Was Absent - No Record Exist</h1> @endif
                         @endif
@@ -482,8 +483,7 @@
                         <br>
                         <br>
 
-
-
+                        
                     </div>
                 </div>
             </div>

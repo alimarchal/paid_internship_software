@@ -207,7 +207,7 @@
                             <thead>
                             <tr class="bg-gray-200 text-black uppercase text-sm">
                                 <th class="py-2 px-2 text-center">ID</th>
-                                <th class="py-2 px-2 text-center">Name</th>
+                                <th class="py-2 px-2 text-center">Name & Email</th>
                                 <th class="py-2 px-2 text-center">Age / Sex</th>
                                 <th class="py-2 px-2 text-center">district</th>
                                 <th class="py-2 px-2 text-center">domicile</th>
@@ -227,9 +227,21 @@
                                         {{ $candidate->id }}
                                     </td>
                                     <td class="py-1 px-2 text-left">
-                                        <a href="{{ route('candidate-user.password-change',$candidate->id) }}">
+                                        
+                                        @if(Auth::user()->email == "hrd@bankajk.com")
+                                            <!--<a href="{{ route('candidate-user.password-change',$candidate->id) }}">-->
                                             {{ ucwords(strtolower($candidate->name)) }}
-                                        </a>
+                                             <!--<br>-->
+                                            
+                                            <!--</a>-->
+                                            <!--{{ $candidate->email }}-->
+                                        @else
+                                            <!--<a href="{{ route('candidate-user.password-change',$candidate->id) }}">-->
+                                            {{ ucwords(strtolower($candidate->name)) }}
+                                           
+                                            <!--</a>-->
+                                        @endif
+                                       
 
                                     </td>
                                     <td class="py-1 px-2 text-center">

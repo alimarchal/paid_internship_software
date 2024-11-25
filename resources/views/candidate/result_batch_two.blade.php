@@ -123,7 +123,7 @@
                                             E-Mail: hrd@bankajk.com
                                         </p>
                                         <p class="text-center font-extrabold capitalize underline " style="font-size: 14px;">
-                                            Paid Internship Portal Result
+                                            Paid Internship Portal Result (Batch-02)
                                         </p>
                                     </td>
                                     <td style="width: 20%; text-align: center;border: none;">

@@ -1,6 +1,7 @@
 <x-app-layout>
     @push('custom_headers')
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     @endpush
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -221,7 +222,7 @@
 
 
                         <br>
-                        @if($user->profile_status == 1 && $user->status == "Shortlisted" & $user->exam_taken == 0)
+                        @if($user->profile_status == 1 && $user->status == "Shortlisted" & $user->exam_taken == 0 && !empty(Auth::user()->test_center))
                             <a href="{{ route('report.call-letters') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Download Your Roll No Slip</a> <br>
                             @php
                                 $now = now();
@@ -313,6 +314,11 @@
                         <div class="bg-white rounded-lg shadow-lg p-4" id="service_length_chart">
                         </div>
                     </div>
+
+
+
+
+
 
                 </div>
                 @endrole

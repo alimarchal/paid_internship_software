@@ -9,20 +9,35 @@ use App\Models\RandomUserQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class QuestionController extends Controller
 {
     public function index(Request $request)
     {
-        $questions = Question::with(['category', 'answers'])
-            ->when($request->filled('category_id'), fn ($q) => $q->where('category_id', $request->category_id))
-            ->when($request->filled('search'), fn ($q) => $q->where('text', 'like', '%'.$request->search.'%'))
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->withQueryString();
+        $perPage = in_array($request->query('per_page'), ['10', '50', '100', 'all'], true) ? $request->query('per_page') : '50';
+
+        $query = QueryBuilder::for(Question::class)
+            ->allowedFilters(
+                AllowedFilter::exact('id'),
+                AllowedFilter::exact('category_id'),
+                AllowedFilter::partial('text'),
+                AllowedFilter::partial('difficulty'),
+                AllowedFilter::callback('answer', function ($q, $v) {
+                    $v = is_array($v) ? implode(',', $v) : $v;
+                    $q->whereHas('answers', fn ($a) => $a->where('text', 'like', "%{$v}%"));
+                }),
+            )
+            ->allowedSorts('id', 'category_id')
+            ->defaultSort('-id')
+            ->with(['category', 'answers']);
+
+        $questions = $perPage === 'all' ? $query->get() : $query->paginate((int) $perPage)->withQueryString();
 
         return view('settings.questions.index', [
             'questions' => $questions,
+            'perPage' => $perPage,
             'categories' => Category::orderBy('name')->get(),
         ]);
     }

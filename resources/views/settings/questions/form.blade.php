@@ -6,11 +6,11 @@
 @endphp
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $question->exists ? 'Edit Question #'.$question->id : 'Add Question' }}</h2>
+        <x-page-header title="{{ $question->exists ? 'Edit Question #'.$question->id : 'Add Question' }}" backRoute="settings.questions.index" :showRefresh="false"/>
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-xl rounded-lg p-6">
                 <x-validation-errors class="mb-4"/>
                 <form method="POST" action="{{ $question->exists ? route('settings.questions.update', $question) : route('settings.questions.store') }}" class="space-y-4">

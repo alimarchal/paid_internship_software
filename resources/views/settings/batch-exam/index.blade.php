@@ -1,9 +1,16 @@
 @php
     $sel = 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full';
     $districts = ['Muzaffarabad', 'Jhelum Valley', 'Neelum', 'Mirpur', 'Bhimber', 'Kotli', 'Poonch', 'Bagh', 'Haveli', 'Sudhanoti', 'Refugee'];
+    $subjects = ['Economics', 'Business Administration', 'Accounting', 'Finance', 'Commerce', 'CS/MCS/MIT', 'Biology/Physics/Commerce (In Case of Metric/FSC)'];
     $paper = old('paper', '');
-    $labels = ['batch_no' => 'Batch', 'status' => 'Status', 'profile_status' => 'Profile', 'district_of_domicile' => 'Domicile', 'exam_state' => 'Exam', 'search' => 'Search', 'per_page' => 'Rows'];
-    $active = collect($labels)->filter(fn ($l, $k) => request()->filled($k));
+    $f = request('filter', []);
+    $f = is_array($f) ? $f : [];
+    $labels = ['id' => 'ID', 'name' => 'Name', 'fathers_name' => 'Father', 'email' => 'Email', 'cnic_number' => 'CNIC', 'contact_number' => 'Mobile',
+        'batch_no' => 'Batch', 'status' => 'Status', 'profile_status' => 'Profile', 'gender' => 'Gender', 'religion' => 'Religion', 'marital_status' => 'Marital',
+        'district' => 'District', 'district_of_domicile' => 'Domicile', 'degree_level' => 'Degree', 'education_degrees_search.major_subject' => 'Subject',
+        'test_center' => 'Test centre', 'test_date' => 'Test date', 'exam_state' => 'Exam', 'paper' => 'Paper', 'applied_from' => 'Applied from', 'applied_to' => 'Applied to', 'search' => 'Search'];
+    $active = collect($labels)->filter(fn ($l, $k) => isset($f[$k]) && $f[$k] !== '');
+    $opt = fn ($key, $value) => ($f[$key] ?? '') === (string) $value ? 'selected' : '';
 @endphp
 <x-app-layout>
     <x-slot name="header">
@@ -12,63 +19,155 @@
 
     {{-- Filters --}}
     <x-filter-section :action="route('settings.batch-exam.index')" :open="$hasFilters">
+        <input type="hidden" name="per_page" value="{{ $perPage }}">
+        <p class="text-[11px] font-semibold uppercase tracking-widest text-gray-500 mb-2">Candidate</p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-                <x-label for="batch_no" value="Batch"/>
-                <select id="batch_no" name="batch_no" class="{{ $sel }}">
+                <x-label for="f_search" value="Quick search (name / email / CNIC / ID)"/>
+                <x-input id="f_search" name="filter[search]" type="text" class="mt-1 block w-full" value="{{ $f['search'] ?? '' }}" placeholder="Search"/>
+            </div>
+            <div>
+                <x-label for="f_id" value="Application No"/>
+                <x-input id="f_id" name="filter[id]" type="text" class="mt-1 block w-full" value="{{ $f['id'] ?? '' }}"/>
+            </div>
+            <div>
+                <x-label for="f_name" value="Name"/>
+                <x-input id="f_name" name="filter[name]" type="text" class="mt-1 block w-full" value="{{ $f['name'] ?? '' }}"/>
+            </div>
+            <div>
+                <x-label for="f_fathers_name" value="Father Name"/>
+                <x-input id="f_fathers_name" name="filter[fathers_name]" type="text" class="mt-1 block w-full" value="{{ $f['fathers_name'] ?? '' }}"/>
+            </div>
+            <div>
+                <x-label for="f_email" value="Email"/>
+                <x-input id="f_email" name="filter[email]" type="text" class="mt-1 block w-full" value="{{ $f['email'] ?? '' }}"/>
+            </div>
+            <div>
+                <x-label for="f_cnic" value="CNIC"/>
+                <x-input id="f_cnic" name="filter[cnic_number]" type="text" class="mt-1 block w-full" value="{{ $f['cnic_number'] ?? '' }}"/>
+            </div>
+            <div>
+                <x-label for="f_contact" value="Mobile"/>
+                <x-input id="f_contact" name="filter[contact_number]" type="text" class="mt-1 block w-full" value="{{ $f['contact_number'] ?? '' }}"/>
+            </div>
+            <div>
+                <x-label for="f_gender" value="Gender"/>
+                <select id="f_gender" name="filter[gender]" class="{{ $sel }}">
+                    <option value="">All</option>
+                    @foreach(['Male', 'Female'] as $v) <option value="{{ $v }}" {{ $opt('gender', $v) }}>{{ $v }}</option> @endforeach
+                </select>
+            </div>
+            <div>
+                <x-label for="f_religion" value="Religion"/>
+                <select id="f_religion" name="filter[religion]" class="{{ $sel }}">
+                    <option value="">All</option>
+                    @foreach(['islam', 'christianity', 'hinduism', 'buddhism', 'judaism'] as $v) <option value="{{ $v }}" {{ $opt('religion', $v) }}>{{ ucfirst($v) }}</option> @endforeach
+                </select>
+            </div>
+            <div>
+                <x-label for="f_marital" value="Marital Status"/>
+                <select id="f_marital" name="filter[marital_status]" class="{{ $sel }}">
+                    <option value="">All</option>
+                    @foreach(['Single', 'Married'] as $v) <option value="{{ $v }}" {{ $opt('marital_status', $v) }}>{{ $v }}</option> @endforeach
+                </select>
+            </div>
+            <div>
+                <x-label for="f_district" value="District"/>
+                <select id="f_district" name="filter[district]" class="{{ $sel }}">
+                    <option value="">All</option>
+                    @foreach($districts as $v) <option value="{{ $v }}" {{ $opt('district', $v) }}>{{ $v }}</option> @endforeach
+                </select>
+            </div>
+            <div>
+                <x-label for="f_domicile" value="District of Domicile"/>
+                <select id="f_domicile" name="filter[district_of_domicile]" class="{{ $sel }}">
+                    <option value="">All</option>
+                    @foreach($districts as $v) <option value="{{ $v }}" {{ $opt('district_of_domicile', $v) }}>{{ $v }}</option> @endforeach
+                </select>
+            </div>
+            <div>
+                <x-label for="f_degree" value="Degree Level"/>
+                <select id="f_degree" name="filter[degree_level]" class="{{ $sel }}">
+                    <option value="">All</option>
+                    @foreach($degreeLevels as $v) <option value="{{ $v }}" {{ $opt('degree_level', $v) }}>{{ $v }}</option> @endforeach
+                </select>
+            </div>
+            <div>
+                <x-label for="f_subject" value="Subject"/>
+                <select id="f_subject" name="filter[education_degrees_search.major_subject]" class="{{ $sel }}">
+                    <option value="">All</option>
+                    @foreach($subjects as $v) <option value="{{ $v }}" {{ $opt('education_degrees_search.major_subject', $v) }}>{{ $v }}</option> @endforeach
+                </select>
+            </div>
+            <div>
+                <x-label for="f_from" value="Applied from"/>
+                <x-input id="f_from" name="filter[applied_from]" type="date" class="mt-1 block w-full" value="{{ $f['applied_from'] ?? '' }}"/>
+            </div>
+            <div>
+                <x-label for="f_to" value="Applied to"/>
+                <x-input id="f_to" name="filter[applied_to]" type="date" class="mt-1 block w-full" value="{{ $f['applied_to'] ?? '' }}"/>
+            </div>
+        </div>
+
+        <p class="text-[11px] font-semibold uppercase tracking-widest text-gray-500 mt-5 mb-2">Batch &amp; Exam</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <x-label for="f_batch" value="Batch"/>
+                <select id="f_batch" name="filter[batch_no]" class="{{ $sel }}">
                     <option value="">All batches</option>
-                    @foreach(\App\Models\Batch::names() as $b)
-                        <option value="{{ $b }}" @selected(request('batch_no') === $b)>{{ $b }}</option>
-                    @endforeach
+                    @foreach(\App\Models\Batch::names() as $v) <option value="{{ $v }}" {{ $opt('batch_no', $v) }}>{{ $v }}</option> @endforeach
                 </select>
             </div>
             <div>
-                <x-label for="status" value="Shortlisted / Pending / Rejected"/>
-                <select id="status" name="status" class="{{ $sel }}">
+                <x-label for="f_status" value="Shortlisted / Pending / Rejected"/>
+                <select id="f_status" name="filter[status]" class="{{ $sel }}">
                     <option value="">All</option>
-                    @foreach(['Shortlisted', 'Pending', 'Rejected'] as $st)
-                        <option value="{{ $st }}" @selected(request('status') === $st)>{{ $st }}</option>
-                    @endforeach
+                    @foreach(['Shortlisted', 'Pending', 'Rejected'] as $v) <option value="{{ $v }}" {{ $opt('status', $v) }}>{{ $v }}</option> @endforeach
                 </select>
             </div>
             <div>
-                <x-label for="profile_status" value="Profile"/>
-                <select id="profile_status" name="profile_status" class="{{ $sel }}">
+                <x-label for="f_profile" value="Profile"/>
+                <select id="f_profile" name="filter[profile_status]" class="{{ $sel }}">
                     <option value="">All</option>
-                    <option value="1" @selected(request('profile_status') === '1')>Submitted</option>
-                    <option value="0" @selected(request('profile_status') === '0')>In-Complete</option>
+                    <option value="1" {{ $opt('profile_status', 1) }}>Submitted</option>
+                    <option value="0" {{ $opt('profile_status', 0) }}>In-Complete</option>
                 </select>
             </div>
             <div>
-                <x-label for="district_of_domicile" value="District of Domicile"/>
-                <select id="district_of_domicile" name="district_of_domicile" class="{{ $sel }}">
+                <x-label for="f_exam" value="Exam"/>
+                <select id="f_exam" name="filter[exam_state]" class="{{ $sel }}">
                     <option value="">All</option>
-                    @foreach($districts as $d)
-                        <option value="{{ $d }}" @selected(request('district_of_domicile') === $d)>{{ $d }}</option>
-                    @endforeach
+                    <option value="not_allowed" {{ $opt('exam_state', 'not_allowed') }}>Not allowed yet</option>
+                    <option value="allowed" {{ $opt('exam_state', 'allowed') }}>Allowed, not finished</option>
+                    <option value="finished" {{ $opt('exam_state', 'finished') }}>Exam finished</option>
                 </select>
             </div>
             <div>
-                <x-label for="exam_state" value="Exam"/>
-                <select id="exam_state" name="exam_state" class="{{ $sel }}">
+                <x-label for="f_paper" value="Question paper"/>
+                <select id="f_paper" name="filter[paper]" class="{{ $sel }}">
                     <option value="">All</option>
-                    <option value="not_allowed" @selected(request('exam_state') === 'not_allowed')>Not allowed yet</option>
-                    <option value="allowed" @selected(request('exam_state') === 'allowed')>Allowed, not finished</option>
-                    <option value="finished" @selected(request('exam_state') === 'finished')>Exam finished</option>
+                    <option value="allocated" {{ $opt('paper', 'allocated') }}>Paper already created</option>
+                    <option value="not_allocated" {{ $opt('paper', 'not_allocated') }}>No paper yet</option>
+                    <option value="configured" {{ $opt('paper', 'configured') }}>Custom paper set</option>
                 </select>
             </div>
-            <div class="lg:col-span-2">
-                <x-label for="search" value="Name / Email / CNIC / ID"/>
-                <x-input id="search" name="search" type="text" class="mt-1 block w-full" :value="request('search')" placeholder="Search"/>
+            <div>
+                <x-label for="f_center" value="Test Centre"/>
+                <select id="f_center" name="filter[test_center]" class="{{ $sel }}">
+                    <option value="">All</option>
+                    @foreach($testCenters as $v) <option value="{{ $v }}" {{ $opt('test_center', $v) }}>{{ \Illuminate\Support\Str::limit($v, 50) }}</option> @endforeach
+                </select>
             </div>
             <div>
-                <x-label for="per_page" value="Rows"/>
-                <select id="per_page" name="per_page" class="{{ $sel }}">
-                    <option value="">Auto (all when filtered)</option>
-                    @foreach([50, 100, 200, 500] as $n)
-                        <option value="{{ $n }}" @selected(request('per_page') == $n)>{{ $n }} per page</option>
+                <x-label for="f_test_date" value="Test Date"/>
+                <x-input id="f_test_date" name="filter[test_date]" type="date" class="mt-1 block w-full" value="{{ $f['test_date'] ?? '' }}"/>
+            </div>
+            <div>
+                <x-label for="sort" value="Sort by"/>
+                <select id="sort" name="sort" class="{{ $sel }}">
+                    @foreach(['id' => 'ID (low to high)', '-id' => 'ID (high to low)', 'name' => 'Name (A-Z)', '-name' => 'Name (Z-A)', '-created_at' => 'Applied (newest)', 'created_at' => 'Applied (oldest)', 'district_of_domicile' => 'Domicile (A-Z)', 'batch_no' => 'Batch'] as $v => $l)
+                        <option value="{{ $v }}" @selected(request('sort', 'id') === $v)>{{ $l }}</option>
                     @endforeach
-                    <option value="all" @selected(request('per_page') === 'all')>Show all</option>
                 </select>
             </div>
         </div>
@@ -82,7 +181,7 @@
         <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
             <span class="font-semibold text-gray-800">{{ $matching }} candidates</span>
             @foreach($active as $k => $label)
-                <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-xs">{{ $label }}: {{ request($k) }}</span>
+                <span class="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 text-xs">{{ $label }}: {{ $f[$k] }}</span>
             @endforeach
             @if($hasFilters)
                 <a href="{{ route('settings.batch-exam.index') }}" class="text-xs text-red-600 hover:underline">clear filters</a>
@@ -90,6 +189,15 @@
             @if(!$paginated)
                 <span class="text-xs text-gray-500">&middot; showing all</span>
             @endif
+            <span class="ml-auto flex items-center gap-2 text-xs text-gray-600">
+                Show
+                <select id="per-page" class="border-gray-300 rounded-md shadow-sm text-xs py-1 pr-8">
+                    @foreach([10, 50, 100, 'all'] as $n)
+                        <option value="{{ $n }}" @selected((string) $perPage === (string) $n)>{{ $n === 'all' ? 'All' : $n }}</option>
+                    @endforeach
+                </select>
+                per page
+            </span>
         </div>
 
         <form method="POST" action="{{ route('settings.batch-exam.apply', request()->query()) }}" id="apply-form" onsubmit="return confirmApply()">
@@ -288,6 +396,12 @@
                 if (n === 0) { alert('Select at least one candidate.'); return false; }
                 return confirm('Apply these changes to ' + n + ' candidate(s)?');
             }
+            document.getElementById('per-page').addEventListener('change', function () {
+                const u = new URL(window.location.href);
+                u.searchParams.set('per_page', this.value);
+                u.searchParams.delete('page');
+                window.location = u.toString();
+            });
             togglePaper(); refreshCount();
         </script>
     @endpush

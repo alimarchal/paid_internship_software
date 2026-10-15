@@ -117,6 +117,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
+    public function randomQuestions(): HasMany
+    {
+        return $this->hasMany(RandomUserQuestion::class);
+    }
+
     public function education_degrees()
     {
         return $this->hasMany(Education::class);

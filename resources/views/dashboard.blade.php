@@ -341,7 +341,7 @@
     @push('modals')
         <script>
             // Add a script to format the CNIC input as 00000-0000000-0
-            document.getElementById('cnic_number').addEventListener('input', function (e) {
+            document.getElementById('cnic_number')?.addEventListener('input', function (e) {
                 const cnicInput = e.target;
                 let cnic = cnicInput.value.replace(/[^0-9]/g, '');
                 if (cnic.length > 13) {
@@ -360,7 +360,7 @@
             });
 
 
-            document.getElementById('cnic_front').addEventListener('change', function() {
+            document.getElementById('cnic_front')?.addEventListener('change', function() {
                 const file = this.files[0]; // Get the first file in the input
                 if (file) { // Check if any file is selected
                     const fileSize = file.size / 1024; // Get file size in KB
@@ -372,7 +372,7 @@
             });
 
 
-            document.getElementById('cnic_back').addEventListener('change', function() {
+            document.getElementById('cnic_back')?.addEventListener('change', function() {
                 const file = this.files[0]; // Get the first file in the input
                 if (file) { // Check if any file is selected
                     const fileSize = file.size / 1024; // Get file size in KB
@@ -384,7 +384,7 @@
             });
 
 
-            document.getElementById('profile_pic_1').addEventListener('change', function() {
+            document.getElementById('profile_pic_1')?.addEventListener('change', function() {
                 const file = this.files[0]; // Get the first file in the input
                 if (file) { // Check if any file is selected
                     const fileSize = file.size / 1024; // Get file size in KB

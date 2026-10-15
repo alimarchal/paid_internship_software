@@ -10,30 +10,36 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class BatchExamController extends Controller
 {
-    /** Filters that narrow the list. When any is used (and no row limit is picked) every match is shown. */
-    private const FILTERS = ['batch_no', 'status', 'profile_status', 'district_of_domicile', 'test_center', 'exam_state', 'search'];
+    public const PER_PAGE = [10, 50, 100, 'all'];
 
     public function index(Request $request, ExamPaperBuilder $builder)
     {
-        $hasFilters = $request->hasAny(self::FILTERS) && collect(self::FILTERS)->contains(fn ($k) => $request->filled($k));
-        $perPage = $request->input('per_page');
-        $showAll = $perPage === 'all' || ($hasFilters && ! $request->filled('per_page'));
+        $hasFilters = collect($request->query('filter', []))->contains(fn ($v) => $v !== null && $v !== '');
 
-        $query = $this->filteredQuery($request)->orderBy('id');
-        $candidates = $showAll ? $query->get() : $query->paginate((int) $perPage ?: 50)->withQueryString();
+        // Default 50 per page with pagination; the user can switch to 10 / 100 / all.
+        $perPage = in_array($request->query('per_page'), array_map('strval', self::PER_PAGE), true) ? $request->query('per_page') : '50';
+        $showAll = $perPage === 'all';
+
+        $query = $this->filteredQuery($request)->defaultSort('id');
+        $candidates = $showAll ? $query->get() : $query->paginate((int) $perPage)->withQueryString();
         $matching = $showAll ? $candidates->count() : $candidates->total();
 
         return view('settings.batch-exam.index', [
             'candidates' => $candidates,
             'paginated' => ! $showAll,
+            'perPage' => $perPage,
             'hasFilters' => $hasFilters,
             'categories' => Category::orderBy('name')->get(),
             'available' => $builder->availability(),
             'allocated' => RandomUserQuestion::whereIn('user_id', $candidates->pluck('id'))->selectRaw('user_id, count(*) n')->groupBy('user_id')->pluck('n', 'user_id'),
             'matching' => $matching,
+            'testCenters' => User::role('Intern')->whereNotNull('test_center')->distinct()->orderBy('test_center')->pluck('test_center'),
+            'degreeLevels' => User::role('Intern')->whereNotNull('degree_level')->distinct()->orderBy('degree_level')->pluck('degree_level'),
         ]);
     }
 
@@ -108,26 +114,54 @@ class BatchExamController extends Controller
             ->with('success', "Updated {$count} candidate(s).");
     }
 
-    private function filteredQuery(Request $request)
+    /** Same filter[...] / sort convention as the rest of the app (Spatie Query Builder). */
+    private function filteredQuery(Request $request): QueryBuilder
     {
-        return User::role('Intern')
-            ->when($request->filled('batch_no'), fn ($q) => $q->where('batch_no', $request->batch_no))
-            ->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))
-            ->when($request->filled('profile_status'), fn ($q) => $q->where('profile_status', $request->profile_status))
-            ->when($request->filled('district_of_domicile'), fn ($q) => $q->where('district_of_domicile', $request->district_of_domicile))
-            ->when($request->filled('test_center'), fn ($q) => $q->where('test_center', $request->test_center))
-            ->when($request->filled('exam_state'), function ($q) use ($request) {
-                match ($request->exam_state) {
-                    'not_allowed' => $q->where('start_test', 0),
-                    'allowed' => $q->where('start_test', 1)->where('exam_taken', 0),
-                    'finished' => $q->where('exam_taken', 1),
-                    default => null,
-                };
-            })
-            ->when($request->filled('search'), function ($q) use ($request) {
-                $s = $request->search;
-                $q->where(fn ($w) => $w->where('name', 'like', "%{$s}%")->orWhere('email', 'like', "%{$s}%")
-                    ->orWhere('cnic_number', 'like', "%{$s}%")->orWhere('id', $s));
-            });
+        return QueryBuilder::for(User::role('Intern'), $request)
+            ->allowedFilters(
+                AllowedFilter::exact('id'),
+                AllowedFilter::partial('name'),
+                AllowedFilter::partial('fathers_name'),
+                AllowedFilter::partial('email'),
+                AllowedFilter::partial('cnic_number'),
+                AllowedFilter::partial('contact_number'),
+                AllowedFilter::exact('batch_no'),
+                AllowedFilter::exact('status'),
+                AllowedFilter::exact('profile_status'),
+                AllowedFilter::exact('gender'),
+                AllowedFilter::exact('religion'),
+                AllowedFilter::exact('marital_status'),
+                AllowedFilter::exact('district'),
+                AllowedFilter::exact('district_of_domicile'),
+                // Values here may contain commas, which Query Builder would otherwise split into an array.
+                AllowedFilter::callback('degree_level', fn ($q, $v) => $q->where('degree_level', is_array($v) ? implode(',', $v) : $v)),
+                AllowedFilter::callback('test_center', fn ($q, $v) => $q->where('test_center', is_array($v) ? implode(',', $v) : $v)),
+                AllowedFilter::exact('test_date'),
+                AllowedFilter::exact('education_degrees_search.major_subject'),
+                AllowedFilter::callback('exam_state', function ($q, $value) {
+                    match ($value) {
+                        'not_allowed' => $q->where('start_test', 0),
+                        'allowed' => $q->where('start_test', 1)->where('exam_taken', 0),
+                        'finished' => $q->where('exam_taken', 1),
+                        default => null,
+                    };
+                }),
+                AllowedFilter::callback('paper', function ($q, $value) {
+                    match ($value) {
+                        'allocated' => $q->whereHas('randomQuestions'),
+                        'not_allocated' => $q->whereDoesntHave('randomQuestions'),
+                        'configured' => $q->whereNotNull('exam_config'),
+                        default => null,
+                    };
+                }),
+                AllowedFilter::callback('applied_from', fn ($q, $v) => $q->whereDate('created_at', '>=', $v)),
+                AllowedFilter::callback('applied_to', fn ($q, $v) => $q->whereDate('created_at', '<=', $v)),
+                AllowedFilter::callback('search', function ($q, $value) {
+                    $value = is_array($value) ? implode(',', $value) : $value;
+                    $q->where(fn ($w) => $w->where('name', 'like', "%{$value}%")->orWhere('email', 'like', "%{$value}%")
+                        ->orWhere('cnic_number', 'like', "%{$value}%")->orWhere('id', $value));
+                }),
+            )
+            ->allowedSorts('id', 'name', 'created_at', 'batch_no', 'district_of_domicile', 'start_test_time');
     }
 }

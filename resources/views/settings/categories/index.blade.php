@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-xl rounded-lg overflow-hidden">
                 <x-status-message/>
                 <table class="w-full text-sm">
@@ -24,7 +24,7 @@
                             <td class="py-2 px-3 font-semibold">{{ $category->name }}</td>
                             <td class="py-2 px-3 text-gray-600">{{ $category->description }}</td>
                             <td class="py-2 px-3 text-center">
-                                <a class="text-indigo-600 hover:underline" href="{{ route('settings.questions.index', ['category_id' => $category->id]) }}">{{ $category->questions_count }}</a>
+                                <a class="text-indigo-600 hover:underline" href="{{ route('settings.questions.index', ['filter' => ['category_id' => $category->id]]) }}">{{ $category->questions_count }}</a>
                             </td>
                             <td class="py-2 px-3 text-center whitespace-nowrap">
                                 <a href="{{ route('settings.categories.edit', $category) }}" class="text-blue-600 hover:underline">Edit</a>

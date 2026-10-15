@@ -31,12 +31,10 @@ class ExperienceController extends Controller
 
 
 
-        $deadline = Carbon::create(2024, 9, 15, 23, 59, 59);
-        $now = Carbon::now();
-
-        if ($now->greaterThan($deadline)) {
-//            return back()->with('error', 'The internship deadline is now complete. You cannot submit your application as the deadline was 27 Feb 2024 at 23:59:59 as per advertised.');
-            return back()->with('error', 'The internship deadline is now complete. You cannot submit your application as the deadline was ' . Carbon::parse($deadline)->format('d-m-Y') .'  at 23:59:59 as per advertised.');
+        // Same deadline as registration (Settings > Batches & Registration).
+        $deadline = \App\Models\Setting::registrationDeadline();
+        if (! \App\Models\Setting::registrationOpen()) {
+            return back()->with('error', 'The internship deadline is now complete. You cannot submit your application as the deadline was '.$deadline->format('d-m-Y H:i').' as per advertised.');
         }
 
         $found_degree = 0;

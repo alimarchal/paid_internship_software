@@ -4,40 +4,36 @@
 
     @endpush
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        <x-page-header title="Dashboard" :showRefresh="true" backRoute="dashboard"/>
     </x-slot>
 
         @role('Super-Admin|admin')
-            <div class="max-w-8xl mx-auto mt-4 px-4 sm:px-2 lg:px-8 print:hidden">
-            <div class="rounded-xl p-4 bg-white shadow-lg">
-                <form method="GET" action="{{ route('dashboard') }}">
-                    <div class="mt-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <!-- Gender -->
-                        <div>
-                            <select name="batch_no" id="batch_no" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
-                                <option value="">Select a Batch No</option>
-                                @foreach(\App\Models\Batch::names() as $batchName)
-                                    <option value="{{ $batchName }}">{{ $batchName }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div>
-                            <x-button class="bg-indigo-500 text-white mt-2">
-                                {{ __('Apply Filters') }}
-                            </x-button>
-                        </div>
+            <div class="max-w-7xl mx-auto mt-4 px-4 sm:px-6 lg:px-8 print:hidden">
+                <form method="GET" action="{{ route('dashboard') }}" class="bg-white rounded-xl shadow-lg px-4 py-3 flex flex-wrap items-center gap-x-6 gap-y-2">
+                    <div class="flex items-center gap-2 text-sm">
+                        <label for="batch_no" class="font-semibold text-gray-700">Batch</label>
+                        <select name="batch_no" id="batch_no" onchange="this.form.submit()" class="border-gray-300 rounded-md shadow-sm text-sm py-1.5 pr-8">
+                            <option value="all" @selected($batch_no === 'all')>All batches</option>
+                            @foreach($batches as $b)
+                                <option value="{{ $b }}" @selected($batch_no === $b)>{{ $b }}{{ $b === $registration['batch'] ? ' (registration)' : '' }}</option>
+                            @endforeach
+                        </select>
                     </div>
+                    <div class="flex items-center gap-2 text-sm">
+                        <label for="show" class="font-semibold text-gray-700">Latest applications</label>
+                        <select name="show" id="show" onchange="this.form.submit()" class="border-gray-300 rounded-md shadow-sm text-sm py-1.5 pr-8">
+                            @foreach([10, 50, 100] as $n)
+                                <option value="{{ $n }}" @selected($show === $n)>Show {{ $n }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <span class="ml-auto text-xs text-gray-500">Showing <b>{{ $batch_no === 'all' ? 'all batches' : $batch_no }}</b></span>
                 </form>
-
             </div>
-        </div>
         @endrole
 
         <div class="py-3">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
 
             @role('Intern')
@@ -226,110 +222,131 @@
 
 
                         <br>
-                        @if($user->profile_status == 1 && $user->status == "Shortlisted" && !empty(Auth::user()->test_center))
-                            <!--<a href="{{ route('report.call-letters') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Download Your Roll No Slip</a> <br>-->
-                            <!--<br>-->
-                            
-                                <a href="{{ route('report.result') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Result</a> <br>
-                                <br>
-
-                            
-                            @php
-                                $now = now();
-                                $startTime = Carbon\Carbon::parse($user->start_test_time);
-                                $endTime = Carbon\Carbon::parse($user->end_test_time);
-                            @endphp
-
-                            @if ($user->start_test == 1 && $now->between($startTime, $endTime))
-                                <a href="{{ route('start_session') }}" class="inline-flex items-center px-4 py-2 m-4 bg-red-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">Start Your Test</a>
+                        @php
+                            $examStart = $user->start_test_time ? Carbon\Carbon::parse($user->start_test_time) : null;
+                            $examEnd = $user->end_test_time ? Carbon\Carbon::parse($user->end_test_time) : null;
+                            $examOpen = $user->start_test == 1 && ! $user->exam_taken && $examStart && $examEnd && now()->between($examStart, $examEnd);
+                            $examState = $user->exam_taken ? 'Exam completed' : (! $user->start_test ? 'Not scheduled yet' : ($examOpen ? 'Open now' : ($examStart && now()->lt($examStart) ? 'Starts '.$examStart->format('d-M-Y H:i') : 'Exam window closed')));
+                            $stBadge = $user->status === 'Shortlisted' ? 'bg-green-100 text-green-800' : ($user->status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800');
+                        @endphp
+                        <div class="mx-auto max-w-3xl mt-4 mb-4 text-left rounded-xl border border-gray-200 bg-gray-50 p-5 font-normal">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                <div><div class="text-xs text-gray-500">Application No</div><div class="font-bold text-gray-900">{{ $user->id }}</div></div>
+                                <div><div class="text-xs text-gray-500">Batch</div><div class="font-bold text-gray-900">{{ $user->batch_no }}</div></div>
+                                <div><div class="text-xs text-gray-500">Status</div><span class="px-2 py-0.5 rounded text-xs font-semibold {{ $stBadge }}">{{ $user->status }}</span></div>
+                                <div><div class="text-xs text-gray-500">Exam</div><div class="font-bold {{ $examOpen ? 'text-green-700' : 'text-gray-900' }}">{{ $examState }}</div></div>
+                            </div>
+                            @if($examStart && $examEnd && $user->start_test)
+                                <div class="mt-3 text-xs text-gray-600">Test window: {{ $examStart->format('d-M-Y H:i') }} &rarr; {{ $examEnd->format('d-M-Y H:i') }}</div>
                             @endif
-                        @endif
+                            <div class="mt-4 flex flex-wrap items-center gap-3">
+                                @if($examOpen)
+                                    <a href="{{ route('start_session') }}" class="inline-flex items-center px-5 py-2.5 bg-green-700 border border-transparent rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">Start Your Test</a>
+                                @endif
+                                @if($user->status == 'Shortlisted' && ! empty($user->test_center))
+                                    <a href="{{ route('report.result') }}" class="text-red-600 font-extrabold hover:underline">Result</a>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                     @endif
                 </div>
                 @endrole
 
                 @role('Super-Admin|admin')
-                <div class="grid grid-cols-12 gap-6 ">
-                    <a href="{{ route('candidate.index',['filter[profile_status]=0']) }}" class="transform  hover:scale-110 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white">
-                        <div class="p-5">
-                            <div class="grid grid-cols-3 gap-1">
-                                <div class="col-span-2">
-                                    <div class="text-3xl font-bold leading-8">
-                                        {{ $profile_in_process }}
-                                    </div>
-                                    <div class="mt-1 text-base font-extrabold text-black">
-                                        Candidates In-Process
-                                    </div>
-                                </div>
-                                <div class="col-span-1 flex items-center justify-end">
-                                    <img src="https://img.icons8.com/?size=128&id=123757&format=png" alt="employees on leave" class="h-12 w-12">
-                                </div>
+                @php
+                    $link = fn (array $extra = []) => route('candidate.index', ['filter' => array_filter(array_merge(['batch_no' => $batch_no === 'all' ? null : $batch_no], $extra), fn ($v) => $v !== null)]);
+                    $cards = [
+                        ['Candidates', $stats['total'], $link(), 'bg-blue-950', 'All registered in this view'],
+                        ['Profile submitted', $stats['submitted'], $link(['profile_status' => 1]), 'bg-green-600', 'Applications completed'],
+                        ['In-process', $stats['in_process'], $link(['profile_status' => 0]), 'bg-red-500', 'Profile not finished'],
+                        ['Shortlisted', $stats['shortlisted'], $link(['status' => 'Shortlisted']), 'bg-emerald-600', $stats['pending'].' pending · '.$stats['rejected'].' rejected'],
+                        ['Exam allowed', $stats['exam_allowed'], $link(['exam_state' => 'allowed']), 'bg-amber-500', 'Allowed, not finished'],
+                        ['Exam finished', $stats['exam_finished'], $link(['exam_state' => 'finished']), 'bg-indigo-600', 'Papers completed'],
+                    ];
+                    $statusBadge = fn ($v) => $v === 'Shortlisted' ? 'bg-green-100 text-green-800' : ($v === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800');
+                @endphp
+
+                <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+                    @foreach($cards as [$label, $value, $url, $color, $hint])
+                        <a href="{{ $url }}" class="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition">
+                            <div class="h-1.5 {{ $color }}"></div>
+                            <div class="p-4">
+                                <div class="text-3xl font-extrabold text-gray-900">{{ number_format($value) }}</div>
+                                <div class="mt-1 text-sm font-semibold text-gray-700">{{ $label }}</div>
+                                <div class="mt-0.5 text-[11px] text-gray-400 truncate">{{ $hint }}</div>
                             </div>
-                        </div>
-                    </a>
-                    <a href="{{ route('candidate.index',['filter[profile_status]=1']) }}" class="transform  hover:scale-110 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white">
-                        <div class="p-5">
-                            <div class="grid grid-cols-3 gap-1">
-                                <div class="col-span-2">
-                                    <div class="text-3xl font-bold leading-8">
-                                        {{$profile_applied }}
-                                    </div>
-                                    <div class="mt-1 text-base font-extrabold text-black">
-                                        Total Candidates Applied
-                                    </div>
-                                </div>
-                                <div class="col-span-1 flex items-center justify-end">
-                                    <img src="https://img.icons8.com/?size=128&id=ZgPBQPTN8R9f&format=png" alt="employees on leave" class="h-12 w-12">
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="{{ route('candidate.index') }}" class="transform  hover:scale-110 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white">
-                        <div class="p-5">
-                            <div class="grid grid-cols-3 gap-1">
-                                <div class="col-span-2">
-                                    <div class="text-3xl font-bold leading-8">
-                                        {{ $profile_total }}
-                                    </div>
-                                    <div class="mt-1 text-base font-extrabold text-black">
-                                        Total Candidates
-                                    </div>
-                                </div>
-                                <div class="col-span-1 flex items-center justify-end">
-                                    <img src="https://img.icons8.com/?size=128&id=J0FhendbHVsR&format=png" alt="employees on leave" class="h-12 w-12">
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                    @endforeach
                 </div>
 
-                <div class="grid grid-cols-6 gap-6 mt-6">
-                    <div class="col-span-6 md:col-span-6 lg:col-span-3">
-                        <div class="bg-white rounded-lg shadow-lg p-4" id="chart">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4">
+                    <div class="bg-white rounded-xl shadow-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm font-semibold text-gray-700">Registration</div>
+                            <span class="px-2 py-0.5 rounded text-xs font-semibold {{ $registration['open'] ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $registration['open'] ? 'Open' : 'Closed' }}</span>
+                        </div>
+                        <div class="mt-2 text-sm text-gray-600">New registrations go to <b>{{ $registration['batch'] }}</b></div>
+                        <div class="text-xs text-gray-500">{{ $registration['open'] ? 'Closes' : 'Closed' }} {{ $registration['deadline']->format('d-M-Y H:i') }}</div>
+                        <a href="{{ route('settings.batches.index') }}" class="mt-3 inline-block text-xs text-indigo-600 hover:underline">Change batch or date &rarr;</a>
+                    </div>
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-4">
+                        <div class="text-sm font-semibold text-gray-700 mb-3">Quick actions</div>
+                        <div class="flex flex-wrap gap-2">
+                            @php $qa = 'inline-flex items-center px-4 py-2 bg-blue-950 rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-800 transition'; @endphp
+                            <a href="{{ route('settings.candidates.create', $batch_no === 'all' ? [] : ['batch_no' => $batch_no]) }}" class="{{ $qa }}">Add Candidates</a>
+                            <a href="{{ route('settings.batch-exam.index', ['filter' => array_filter(['batch_no' => $batch_no === 'all' ? null : $batch_no])]) }}" class="{{ $qa }}">Batch Exam Setup</a>
+                            <a href="{{ $link() }}" class="{{ $qa }}">Candidates</a>
+                            <a href="{{ route('settings.questions.index') }}" class="{{ $qa }}">Questions</a>
+                            <a href="{{ route('settings.index') }}" class="{{ $qa }}">Settings</a>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-span-6 md:col-span-6 lg:col-span-3">
-                        <div class="bg-white rounded-lg shadow-lg p-4" id="chart_two">
-                        </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-white rounded-xl shadow-lg p-4"><div id="chart"></div></div>
+                    <div class="bg-white rounded-xl shadow-lg p-4"><div id="chart_two"></div></div>
+                    <div class="bg-white rounded-xl shadow-lg p-4"><div id="chart_subjects"></div></div>
+                    <div class="bg-white rounded-xl shadow-lg p-4"><div id="service_length_chart"></div></div>
+                </div>
+
+                <div class="mt-4 bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="px-4 py-3 flex items-center justify-between border-b">
+                        <div class="text-sm font-semibold text-gray-700">Latest applications <span class="text-gray-400 font-normal">(last {{ $show }})</span></div>
+                        <a href="{{ $link() }}" class="text-xs text-indigo-600 hover:underline">View all &rarr;</a>
                     </div>
-
-                    <div class="col-span-6 md:col-span-6 lg:col-span-4">
-                        <div class="bg-white rounded-lg shadow-lg p-4" id="chart_subjects">
-                        </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-max w-full table-auto text-sm">
+                            <thead>
+                            <tr class="bg-green-800 text-white uppercase text-xs">
+                                <th class="py-2 px-3 text-left">ID</th>
+                                <th class="py-2 px-2 text-left">Name</th>
+                                <th class="py-2 px-2 text-left">District</th>
+                                <th class="py-2 px-2 text-left">Batch</th>
+                                <th class="py-2 px-2 text-left">Applied</th>
+                                <th class="py-2 px-2 text-center">Profile</th>
+                                <th class="py-2 px-2 text-center">Status</th>
+                                <th class="py-2 px-2 text-center">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-black">
+                            @forelse($recent as $r)
+                                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                    <td class="py-1.5 px-3">{{ $r->id }}</td>
+                                    <td class="py-1.5 px-2">{{ ucwords(strtolower($r->name)) }}</td>
+                                    <td class="py-1.5 px-2">{{ $r->district_of_domicile ?: $r->district }}</td>
+                                    <td class="py-1.5 px-2">{{ $r->batch_no }}</td>
+                                    <td class="py-1.5 px-2 text-xs whitespace-nowrap">{{ $r->created_at?->format('d-M-Y H:i') }}</td>
+                                    <td class="py-1.5 px-2 text-center"><span class="px-2 py-0.5 rounded text-xs font-semibold {{ $r->profile_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $r->profile_status == 1 ? 'Submitted' : 'In-Complete' }}</span></td>
+                                    <td class="py-1.5 px-2 text-center"><span class="px-2 py-0.5 rounded text-xs font-semibold {{ $statusBadge($r->status) }}">{{ $r->status }}</span></td>
+                                    <td class="py-1.5 px-2 text-center"><a href="{{ route('candidate.print', $r->id) }}" class="text-blue-600 hover:underline">Open</a></td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="8" class="py-6 text-center text-gray-500">No candidates yet.</td></tr>
+                            @endforelse
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="col-span-6 md:col-span-6 lg:col-span-2">
-                        <div class="bg-white rounded-lg shadow-lg p-4" id="service_length_chart">
-                        </div>
-                    </div>
-
-
-
-
-
-
                 </div>
                 @endrole
 
@@ -398,272 +415,46 @@
         </script>
         @role('Super-Admin|admin')
         <script>
-            var options = {
-                series: [@foreach($district_wise as $key => $value)
-                    {{ $value }},
-                    @endforeach],
-                chart: {
-                    width: '100%',
-                    height: '400px',
-                    type: 'pie',
-                },
-                legend: {
-                    position: 'right',
-                },
-                title: {
-                    text: 'AJK District Wise',
-                    align: 'center',
-                    margin: 0,
-                    offsetX: 0,
-                    offsetY: 0,
-                    floating: false,
-                    style: {
-                        fontSize:  '16px',
-                        fontWeight:  'bold',
-                        fontFamily:  undefined,
-                        color:  '#263238'
-                    },
-                },
-                labels: [@foreach($district_wise as $key => $value)
-                    '{{ $key }}',
-                    @endforeach],
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: 200
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }]
-            };
+            const title = (t) => ({ text: t, align: 'center', style: { fontSize: '16px', fontWeight: 'bold', color: '#263238' } });
+            const render = (el, opts) => { const node = document.querySelector(el); if (node && window.ApexCharts) new ApexCharts(node, opts).render(); };
 
-            var chart = new ApexCharts(document.querySelector("#chart"), options);
-            chart.render();
+            render('#chart', {
+                chart: { type: 'pie', width: '100%', height: 360 },
+                series: @json(array_values($district_wise)),
+                labels: @json(array_keys($district_wise)),
+                title: title('AJK District Wise'),
+                legend: { position: 'right' },
+                responsive: [{ breakpoint: 640, options: { legend: { position: 'bottom' } } }]
+            });
 
+            render('#chart_two', {
+                chart: { type: 'donut', width: '100%', height: 360 },
+                series: @json(array_values($gender_wise)),
+                labels: @json(array_keys($gender_wise)),
+                colors: ['#1d4ed8', '#db2777'],
+                title: title('Gender Wise'),
+                legend: { position: 'bottom' }
+            });
 
-            // chart 2
+            render('#chart_subjects', {
+                chart: { type: 'bar', height: 360, toolbar: { show: false } },
+                series: [{ name: 'Candidates', data: @json(array_values($degreeCountsFormatted)) }],
+                xaxis: { categories: @json(array_keys($degreeCountsFormatted)) },
+                plotOptions: { bar: { horizontal: true, borderRadius: 4, distributed: true } },
+                legend: { show: false },
+                dataLabels: { enabled: true },
+                title: title('Subject Wise')
+            });
 
-            var options_two = {
-                series: [@foreach($gender_wise as $key => $value)
-                    {{ $value }},
-                    @endforeach],
-                chart: {
-                    width: '100%',
-                    height: '400px',
-                    type: 'pie',
-                },
-                legend: {
-                    position: 'right',
-                },
-                title: {
-                    text: 'Gender Wise Applied',
-                    align: 'center',
-                    margin: 0,
-                    offsetX: 0,
-                    offsetY: 0,
-                    floating: false,
-                    style: {
-                        fontSize:  '16px',
-                        fontWeight:  'bold',
-                        fontFamily:  undefined,
-                        color:  '#263238'
-                    },
-                },
-                labels: [@foreach($gender_wise as $key => $value)
-                    '{{ $key }}',
-                    @endforeach],
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: 200
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }]
-            };
-
-            var chart_two = new ApexCharts(document.querySelector("#chart_two"), options_two);
-            chart_two.render();
-
-
-
-
-            var service_length_options = {
-                series: [ @foreach($finalAgeWiseData as $key => $value) {{ $value }}, @endforeach  ],
-                dataLabels: {
-                    formatter: function (val, opts) {
-                        return opts.w.config.series[opts.seriesIndex]
-                    },
-                },
-                chart: {
-                    type: 'donut',
-                    width: '100%',
-                    height: '200px',
-                    toolbar: {
-                        show: true,
-                        offsetX: 0,
-                        offsetY: 0,
-                        tools: {
-                            download: true,
-                            selection: true,
-                            zoom: true,
-                            zoomin: true,
-                            zoomout: true,
-                            pan: true,
-                            reset: true | '<img src="/static/icons/reset.png" width="20">',
-                            customIcons: []
-                        },
-                        export: {
-                            csv: {
-                                filename: undefined,
-                                columnDelimiter: ',',
-                                headerCategory: 'category',
-                                headerValue: 'value',
-                                dateFormatter(timestamp) {
-                                    return new Date(timestamp).toDateString()
-                                }
-                            },
-                            svg: {
-                                filename: undefined,
-                            },
-                            png: {
-                                filename: undefined,
-                            }
-                        },
-                        autoSelected: 'zoom'
-                    },
-                },
-                plotOptions: {
-                    pie: {
-                        startAngle: -90,
-                        endAngle: 90,
-                        offsetY: 10
-                    }
-                },
-                theme: {
-                    monochrome: {
-                        enabled: true,
-                        color: '#059f0f',
-                        shadeTo: 'dark',
-                        shadeIntensity: 0.65
-                    }
-                },
-                markers: {
-                    colors: ['#F44336', '#E91E63', '#9C27B0']
-                },
-                labels: [ @foreach($finalAgeWiseData as $key => $value) '{{ $key }}', @endforeach ],
-                legend: {
-                    position: 'right',
-
-                },
-                title: {
-                    text: 'Total Age Wise - {{ $finalAgeWiseData['18-21 Years'] + $finalAgeWiseData['22-24 Years'] + $finalAgeWiseData['25-27 Years'] }}',
-                    align: 'left',
-                    margin: 0,
-                    offsetX: 0,
-                    offsetY: 0,
-                    floating: false,
-                    style: {
-                        fontSize:  '16px',
-                        fontWeight:  'bold',
-                        fontFamily:  undefined,
-                        color:  '#263238'
-                    },
-                },
-                grid: {
-                    padding: {
-                        bottom: -70
-                    }
-                },
-                responsive: [{
-                    breakpoint: 678,
-                    options: {
-                        chart: {
-                            width: '100%',
-                            height:'180px'
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }]
-            };
-            var service_length_chart = new ApexCharts(document.querySelector("#service_length_chart"), service_length_options);
-            service_length_chart.render();
-
-
-
-
-            var options_subjects = {
-                series: [{
-                    name: 'Total Applied',
-                    data: [@foreach($degreeCountsFormatted as $key => $value) {{ $value }}, @endforeach  ]
-                }],
-                chart: {
-                    type: 'bar',
-                    height: 350
-                },
-
-                title: {
-                    text: 'Major Subject Wise Applied',
-                    align: 'center',
-                    margin: 0,
-                    offsetX: 0,
-                    offsetY: 0,
-                    floating: false,
-                    style: {
-                        fontSize:  '16px',
-                        fontWeight:  'bold',
-                        fontFamily:  undefined,
-                        color:  '#263238'
-                    },
-                },
-
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: '55%',
-                        endingShape: 'rounded'
-                    },
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ['transparent']
-                },
-                xaxis: {
-                    categories: [@foreach($degreeCountsFormatted as $key => $value) '{{ $key }}', @endforeach],
-                },
-                yaxis: {
-                    title: {
-                        text: 'Total (Count)'
-                    }
-                },
-                fill: {
-                    opacity: 1
-                },
-                tooltip: {
-                    y: {
-                        formatter: function (val) {
-                            return "" + val + ""
-                        }
-                    }
-                }
-            };
-
-            var chart_options_subjects = new ApexCharts(document.querySelector("#chart_subjects"), options_subjects);
-            chart_options_subjects.render();
-
-
+            render('#service_length_chart', {
+                chart: { type: 'bar', height: 360, toolbar: { show: false } },
+                series: [{ name: 'Candidates', data: @json(array_values($finalAgeWiseData)) }],
+                xaxis: { categories: @json(array_keys($finalAgeWiseData)) },
+                plotOptions: { bar: { columnWidth: '45%', borderRadius: 4, distributed: true } },
+                legend: { show: false },
+                dataLabels: { enabled: true },
+                title: title('Age at Application')
+            });
         </script>
         @endrole
     @endpush

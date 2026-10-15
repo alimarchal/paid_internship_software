@@ -78,27 +78,80 @@
         </style>
     @endpush
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight inline-block"> {{ __('Student Admission') }} </h2>
-        <div class="flex justify-center items-center float-right">
-            <a href="{{ url()->previous() }}"
-               class="text-center px-4 py-1.5 text-gray-600 bg-white border rounded-lg focus:outline-none hover:bg-gray-100 transition-colors duration-200 transform dark:text-black dark:border-gray-200 dark:hover:bg-white dark:bg-gray-700"
-               title="Back">
-                Back
-            </a>
-            <button onclick="window.print()" class=" text-center px-4 py-2 text-gray-600 bg-white border rounded-lg focus:outline-none hover:bg-gray-100 transition-colors duration-200 transform dark:text-black dark:border-gray-200 dark:hover:bg-white dark:bg-gray-700 ml-2" title="Members List">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
-                </svg>
+        <x-page-header title="Candidate #{{ $user->id }}" :backRoute="url()->previous()" :showRefresh="false">
+            <button type="button" onclick="window.print()" class="inline-flex items-center px-4 py-2 bg-blue-950 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-800 focus:outline-none" title="Print">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                <span class="hidden md:inline-block ml-1">Print</span>
             </button>
-        </div>
+        </x-page-header>
     </x-slot>
     <div class="py-1">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 ">
                 <div class=" mb-4 bg-white dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:border-gray-700">
                     <!-- resources/views/users/create.blade.php -->
                     <x-validation-errors class="mb-4 mt-4"/>
                     <x-status-message class="mb-4"/>
+
+                    @php
+                        $viewerIsAdmin = Auth::user()->hasRole(['admin', 'Super-Admin']);
+                        $badge = fn ($v) => $v === 'Shortlisted' ? 'bg-green-100 text-green-800' : ($v === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800');
+                        $paperCount = \App\Models\RandomUserQuestion::where('user_id', $user->id)->count();
+                        $history = $user->comments()->limit(3)->get();
+                    @endphp
+                    <div class="print:hidden mb-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                        <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                            <div>
+                                <div class="text-lg font-bold text-gray-900">{{ ucwords(strtolower($user->name)) }}</div>
+                                <div class="text-xs text-gray-500">Application No {{ $user->id }} &middot; {{ $user->email }}</div>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 text-xs">
+                                <span class="px-2 py-1 rounded bg-indigo-100 text-indigo-800 font-semibold">{{ $user->batch_no }}</span>
+                                <span class="px-2 py-1 rounded font-semibold {{ $user->profile_status == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $user->profile_status == 1 ? 'Profile submitted' : 'Profile incomplete' }}</span>
+                                <span class="px-2 py-1 rounded font-semibold {{ $badge($user->status) }}">{{ $user->status }}</span>
+                                <span class="px-2 py-1 rounded bg-gray-200 text-gray-700 font-semibold">
+                                    @if($user->exam_taken) Exam finished @elseif($user->start_test) Exam allowed @else Exam not allowed @endif
+                                    @if($paperCount) &middot; {{ $paperCount }} q. @endif
+                                </span>
+                            </div>
+                            @if($viewerIsAdmin)
+                                <div class="ml-auto flex gap-2">
+                                    <a href="{{ route('candidate-user.password-change', $user->id) }}" class="px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-white bg-blue-950 rounded-md hover:bg-green-800">Exam setup</a>
+                                </div>
+                            @endif
+                        </div>
+
+                        @if($viewerIsAdmin)
+                            <form action="{{ route('candidate.shortlisted', $user->id) }}" method="POST" class="mt-4 grid grid-cols-1 md:grid-cols-6 gap-3 items-end border-t border-gray-200 pt-4">
+                                @csrf
+                                <div class="md:col-span-2">
+                                    <label for="status" class="block text-sm font-medium text-gray-800">Decision <span class="text-red-500">*</span></label>
+                                    <select id="status" required name="status" class="border-gray-300 rounded-md shadow-sm block mt-1 w-full">
+                                        <option value="">Select a decision</option>
+                                        @foreach(['Shortlisted', 'Pending', 'Rejected'] as $st)
+                                            <option value="{{ $st }}">{{ $st }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="md:col-span-3">
+                                    <label for="comment" class="block text-sm font-medium text-gray-800">Remarks</label>
+                                    <input id="comment" name="comment" type="text" class="border-gray-300 rounded-md shadow-sm block mt-1 w-full" placeholder="Optional remarks saved with the decision">
+                                </div>
+                                <div>
+                                    <button type="submit" id="submit-btn" class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-950 rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-800">Save Decision</button>
+                                </div>
+                            </form>
+
+                            @if($history->isNotEmpty())
+                                <div class="mt-3 text-xs text-gray-600">
+                                    <span class="font-semibold">Recent decisions:</span>
+                                    @foreach($history as $h)
+                                        <span class="inline-block mr-3"><span class="px-1.5 py-0.5 rounded {{ $badge($h->status) }}">{{ $h->status }}</span> {{ $h->created_at->format('d-M-Y H:i') }}@if($h->comments) &mdash; {{ \Illuminate\Support\Str::limit(trim(strip_tags(html_entity_decode($h->comments))), 120) }}@endif</span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        @endif
+                    </div>
 
                     <div class="bg-white">
 
@@ -390,35 +443,7 @@
 
 
 
-                        <form action="{{ route('candidate.shortlisted', $user->id) }}" method="POST" class="print:hidden">
-                            @csrf
-                            <div class="grid grid-cols-1 mb-8 pb-8 md:grid-cols-1 lg:grid-cols-1 gap-4 mt-4" style="padding-left: 50px!important; padding-right: 50px!important;">
-                                <div>
 
-
-                                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Detail Decision Remarks</label>
-                                    <textarea id="comment" name="comment"  rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
-                                </div>
-                                <div>
-                                    <label class="block font-extrabold font-medium text-sm text-black" for="status">
-                                        Detail Decision Remarks
-                                        <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="status" required name="status" class="border-gray-300 dark:border-gray-700 dark:bg-black dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full">
-                                        <option value="">None</option>
-                                        <option value="Pending">Pending</option>
-                                        <option value="Shortlisted">Shortlisted</option>
-                                        <option value="Rejected">Rejected</option>
-                                    </select>
-                                </div>
-
-                                <div class="flex items-center justify-end mt-1">
-                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150" id="submit-btn">
-                                        Save Final Decision
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
                         
                         
                           @if($get_user_questions->isNotEmpty())
@@ -491,7 +516,7 @@
     </div>
     @push('modals')
         <script>
-            document.getElementById('submit-btn').addEventListener('click', function(event) {
+            document.getElementById('submit-btn')?.addEventListener('click', function(event) {
                 const confirmed = confirm('Are you sure you have read all the profile of this candidate?');
                 if (!confirmed) {
                     event.preventDefault(); // Prevent form submission

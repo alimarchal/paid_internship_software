@@ -7,7 +7,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-2 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-2 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-xl overflow-hidden rounded-lg">
                 <div class="rounded-lg bg-white overflow-x-auto dark:bg-gray-800 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent border-b border-gray-200 dark:border-gray-700">
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\CandidateFilters;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Comment;
 use App\Models\RandomUserQuestion;
@@ -9,76 +10,65 @@ use App\Models\User;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
-use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $role_name = \Auth::user()->roles->first()->name;
+        $role_name = Auth::user()->roles->first()->name;
 
-        if ($role_name == "admin" || $role_name == "Super-Admin") {
-            $candidates = QueryBuilder::for(User::class)
-                ->allowedFilters(
-                    'name',
-                    'fathers_name',
-                    'email',
-                    AllowedFilter::exact('latestStatus.status'),
-                    AllowedFilter::exact('id'),
-                    AllowedFilter::exact('gender'),
-                    AllowedFilter::exact('religion'),
-                    AllowedFilter::exact('district'),
-                    AllowedFilter::exact('district_of_domicile'),
-                    AllowedFilter::exact('cnic_number'),
-                    AllowedFilter::exact('profile_status'),
-                    AllowedFilter::exact('batch_no'),
-                    AllowedFilter::exact('status'),
-                    AllowedFilter::exact('contact_number'),
-                    AllowedFilter::exact('education_degrees_search.major_subject'),
-                )
-                ->where('id', '>', 3)
-                ->with('education_degrees', 'education_degrees_search','latestStatus')
-                ->paginate(15)->withQueryString();
+        if ($role_name == 'admin' || $role_name == 'Super-Admin') {
+            // Default 50 per page with pagination; the list can also show 10 / 100 / all.
+            $perPage = in_array($request->query('per_page'), ['10', '50', '100', 'all'], true) ? $request->query('per_page') : '50';
 
-            return view('candidate.index', compact('candidates'));
-        }
-        else {
-            $candidates = QueryBuilder::for(User::class)->with('education_degrees')
-                ->allowedFilters(
-                    'name',
-                    'fathers_name',
-                    'email',
-                    AllowedFilter::exact('id'),
-                    AllowedFilter::exact('gender'),
-                    AllowedFilter::exact('religion'),
-                    AllowedFilter::exact('district'),
-                    AllowedFilter::exact('district_of_domicile'),
-                    AllowedFilter::exact('cnic_number'),
-                    AllowedFilter::exact('profile_status'),
-                    AllowedFilter::exact('contact_number'),
-                )
-                ->where('id', \Auth::user()->id)
-                ->paginate(15)->withQueryString();
+            $query = QueryBuilder::for(User::candidates(), $request)
+                ->allowedFilters(...CandidateFilters::allowed())
+                ->allowedSorts(...CandidateFilters::sorts())
+                ->defaultSort('id')
+                ->with('education_degrees', 'education_degrees_search', 'latestStatus');
 
-            return view('candidate.index', compact('candidates'));
+            $candidates = $perPage === 'all' ? $query->get() : $query->paginate((int) $perPage)->withQueryString();
+
+            return view('candidate.index', [
+                'candidates' => $candidates,
+                'paginated' => $perPage !== 'all',
+                'perPage' => $perPage,
+                'isAdmin' => true,
+                'statusCounts' => User::candidates()->selectRaw('status, count(*) n')->groupBy('status')->pluck('n', 'status'),
+                'testCenters' => User::candidates()->whereNotNull('test_center')->distinct()->orderBy('test_center')->pluck('test_center'),
+                'degreeLevels' => User::candidates()->whereNotNull('degree_level')->distinct()->orderBy('degree_level')->pluck('degree_level'),
+            ]);
+        } else {
+            $candidates = User::with('education_degrees')->where('id', Auth::user()->id)->get();
+
+            return view('candidate.index', [
+                'candidates' => $candidates,
+                'paginated' => false,
+                'perPage' => 'all',
+                'isAdmin' => false,
+                'statusCounts' => collect(),
+                'testCenters' => collect(),
+                'degreeLevels' => collect(),
+            ]);
         }
     }
 
     public function print(User $user)
     {
-        $role_name = \Auth::user()->roles->first()->name;
-        if ($role_name == "admin" || $role_name == "Super-Admin") {
+        $role_name = Auth::user()->roles->first()->name;
+        if ($role_name == 'admin' || $role_name == 'Super-Admin') {
             $get_user_questions = RandomUserQuestion::where('user_id', $user->id)->get();
-//            dd($get_user_questions);
-            return view('candidate.print', compact('user','get_user_questions'));
-        }
-        else {
-            if (\Auth::user()->id != $user->id) {
+
+            //            dd($get_user_questions);
+            return view('candidate.print', compact('user', 'get_user_questions'));
+        } else {
+            if (Auth::user()->id != $user->id) {
                 abort(401);
             }
             // The paper review section is admin-only; interns get an empty set so the page still renders.
             $get_user_questions = collect();
+
             return view('candidate.print', compact('user', 'get_user_questions'));
         }
     }
@@ -100,18 +90,17 @@ class UserController extends Controller
             $request->merge(['cnic_back_path' => $profile_path]);
         }
 
-
         $user->update($request->all());
         session()->flash('success', 'Your basic information record updated successfully.');
+
         return to_route('dashboard');
     }
-
 
     public function shortlisted(Request $request, User $user)
     {
         // Check if the authenticated user has the required role
         $role_name = Auth::user()->roles->first()->name;
-        if ($role_name == "admin" || $role_name == "Super-Admin") {
+        if ($role_name == 'admin' || $role_name == 'Super-Admin') {
             // Begin a transaction
             DB::beginTransaction();
 
@@ -152,8 +141,7 @@ class UserController extends Controller
                 // Redirect back or to a specific route
                 return back();
             }
-        }
-        else {
+        } else {
             // If user does not have the required role, abort with 401 Unauthorized
             return abort(401);
         }

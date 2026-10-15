@@ -117,6 +117,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
+    /** Interns that take part in the programme (ids 1-3 are the built-in example/admin accounts). */
+    public function scopeCandidates($query)
+    {
+        return $query->role('Intern')->where($this->getTable().'.id', '>', 3);
+    }
+
     public function randomQuestions(): HasMany
     {
         return $this->hasMany(RandomUserQuestion::class);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\CandidateFilters;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\RandomUserQuestion;
@@ -12,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class BatchExamController extends Controller
@@ -40,8 +40,8 @@ class BatchExamController extends Controller
             'available' => $builder->availability(),
             'allocated' => RandomUserQuestion::whereIn('user_id', $candidates->pluck('id'))->selectRaw('user_id, count(*) n')->groupBy('user_id')->pluck('n', 'user_id'),
             'matching' => $matching,
-            'testCenters' => User::role('Intern')->whereNotNull('test_center')->distinct()->orderBy('test_center')->pluck('test_center'),
-            'degreeLevels' => User::role('Intern')->whereNotNull('degree_level')->distinct()->orderBy('degree_level')->pluck('degree_level'),
+            'testCenters' => User::candidates()->whereNotNull('test_center')->distinct()->orderBy('test_center')->pluck('test_center'),
+            'degreeLevels' => User::candidates()->whereNotNull('degree_level')->distinct()->orderBy('degree_level')->pluck('degree_level'),
         ]);
     }
 
@@ -66,7 +66,7 @@ class BatchExamController extends Controller
 
         $query = $request->boolean('select_all_matching')
             ? $this->filteredQuery($request)
-            : User::role('Intern')->whereIn('id', $data['ids'] ?? []);
+            : User::candidates()->whereIn('id', $data['ids'] ?? []);
 
         $count = (clone $query)->count();
         if ($count === 0) {
@@ -89,10 +89,10 @@ class BatchExamController extends Controller
         if ($request->boolean('change_password')) {
             $update['password'] = Hash::make($data['password']);
         }
-        if (!empty($data['start_test_time'])) {
+        if (! empty($data['start_test_time'])) {
             $update['start_test_time'] = Carbon::parse($data['start_test_time']);
         }
-        if (!empty($data['end_test_time'])) {
+        if (! empty($data['end_test_time'])) {
             $update['end_test_time'] = Carbon::parse($data['end_test_time']);
         }
 
@@ -116,7 +116,7 @@ class BatchExamController extends Controller
             $update['exam_config'] = json_encode(['total' => (int) $data['total_questions'], 'categories' => $counts->all()]);
         }
 
-        if (!$update) {
+        if (! $update) {
             return back()->withInput()->with('error', 'Nothing to change. Fill at least one option.');
         }
 
@@ -142,54 +142,10 @@ class BatchExamController extends Controller
             ->with('success', "Updated {$count} candidate(s).");
     }
 
-    /** Same filter[...] / sort convention as the rest of the app (Spatie Query Builder). */
     private function filteredQuery(Request $request): QueryBuilder
     {
-        return QueryBuilder::for(User::role('Intern'), $request)
-            ->allowedFilters(
-                AllowedFilter::exact('id'),
-                AllowedFilter::partial('name'),
-                AllowedFilter::partial('fathers_name'),
-                AllowedFilter::partial('email'),
-                AllowedFilter::partial('cnic_number'),
-                AllowedFilter::partial('contact_number'),
-                AllowedFilter::exact('batch_no'),
-                AllowedFilter::exact('status'),
-                AllowedFilter::exact('profile_status'),
-                AllowedFilter::exact('gender'),
-                AllowedFilter::exact('religion'),
-                AllowedFilter::exact('marital_status'),
-                AllowedFilter::exact('district'),
-                AllowedFilter::exact('district_of_domicile'),
-                // Values here may contain commas, which Query Builder would otherwise split into an array.
-                AllowedFilter::callback('degree_level', fn ($q, $v) => $q->where('degree_level', is_array($v) ? implode(',', $v) : $v)),
-                AllowedFilter::callback('test_center', fn ($q, $v) => $q->where('test_center', is_array($v) ? implode(',', $v) : $v)),
-                AllowedFilter::exact('test_date'),
-                AllowedFilter::exact('education_degrees_search.major_subject'),
-                AllowedFilter::callback('exam_state', function ($q, $value) {
-                    match ($value) {
-                        'not_allowed' => $q->where('start_test', 0),
-                        'allowed' => $q->where('start_test', 1)->where('exam_taken', 0),
-                        'finished' => $q->where('exam_taken', 1),
-                        default => null,
-                    };
-                }),
-                AllowedFilter::callback('paper', function ($q, $value) {
-                    match ($value) {
-                        'allocated' => $q->whereHas('randomQuestions'),
-                        'not_allocated' => $q->whereDoesntHave('randomQuestions'),
-                        'configured' => $q->whereNotNull('exam_config'),
-                        default => null,
-                    };
-                }),
-                AllowedFilter::callback('applied_from', fn ($q, $v) => $q->whereDate('created_at', '>=', $v)),
-                AllowedFilter::callback('applied_to', fn ($q, $v) => $q->whereDate('created_at', '<=', $v)),
-                AllowedFilter::callback('search', function ($q, $value) {
-                    $value = is_array($value) ? implode(',', $value) : $value;
-                    $q->where(fn ($w) => $w->where('name', 'like', "%{$value}%")->orWhere('email', 'like', "%{$value}%")
-                        ->orWhere('cnic_number', 'like', "%{$value}%")->orWhere('id', $value));
-                }),
-            )
-            ->allowedSorts('id', 'name', 'created_at', 'batch_no', 'district_of_domicile', 'start_test_time');
+        return QueryBuilder::for(User::candidates(), $request)
+            ->allowedFilters(...CandidateFilters::allowed())
+            ->allowedSorts(...CandidateFilters::sorts());
     }
 }

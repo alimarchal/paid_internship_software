@@ -77,7 +77,9 @@ class UserController extends Controller
             if (\Auth::user()->id != $user->id) {
                 abort(401);
             }
-            return view('candidate.print', compact('user'));
+            // The paper review section is admin-only; interns get an empty set so the page still renders.
+            $get_user_questions = collect();
+            return view('candidate.print', compact('user', 'get_user_questions'));
         }
     }
 

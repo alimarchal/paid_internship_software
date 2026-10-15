@@ -301,6 +301,22 @@
                         </div>
                     </div>
 
+                    <div class="mt-4 border-t pt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <x-label for="set_status" value="Shortlist / Reject (status)"/>
+                            <select id="set_status" name="set_status" class="{{ $sel }}">
+                                <option value="">Don't change</option>
+                                @foreach(['Shortlisted', 'Pending', 'Rejected'] as $st)
+                                    <option value="{{ $st }}" @selected(old('set_status') === $st)>{{ $st }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="lg:col-span-3">
+                            <x-label for="status_comment" value="Comment (optional, saved with the status)"/>
+                            <x-input id="status_comment" name="status_comment" type="text" class="block mt-1 w-full" value="{{ old('status_comment') }}" placeholder="e.g. Shortlisted for assessment test"/>
+                        </div>
+                    </div>
+
                     <div class="mt-4 border-t pt-3">
                         <x-label value="Question paper"/>
                         <div class="flex flex-wrap gap-6 mt-1 text-sm">

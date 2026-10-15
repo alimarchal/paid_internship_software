@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\RandomUserQuestion;
 use App\Models\User;
 use App\Services\ExamPaperBuilder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -54,6 +56,8 @@ class BatchExamController extends Controller
             'password' => ['nullable', 'required_if:change_password,1', 'string', 'min:8'],
             'start_test_time' => ['nullable', 'date'],
             'end_test_time' => ['nullable', 'date', 'after:start_test_time'],
+            'set_status' => ['nullable', Rule::in(['', 'Shortlisted', 'Pending', 'Rejected'])],
+            'status_comment' => ['nullable', 'string', 'max:255'],
             'paper' => ['nullable', Rule::in(['', 'set', 'default'])],
             'total_questions' => ['nullable', 'required_if:paper,set', 'integer', 'min:1', 'max:500'],
             'category_counts' => ['nullable', 'array'],
@@ -70,6 +74,14 @@ class BatchExamController extends Controller
         }
 
         $update = [];
+
+        // Status changes also write a comment row, like the single Shortlist/Reject action (the candidate list filters on it).
+        $newStatus = $data['set_status'] ?? '';
+        $statusIds = collect();
+        if ($newStatus !== '') {
+            $update['status'] = $newStatus;
+            $statusIds = (clone $query)->pluck('id');
+        }
 
         if (($data['start_test'] ?? '') !== '') {
             $update['start_test'] = (int) $data['start_test'];
@@ -108,7 +120,23 @@ class BatchExamController extends Controller
             return back()->withInput()->with('error', 'Nothing to change. Fill at least one option.');
         }
 
-        $query->update($update + ['updated_at' => now()]);
+        DB::transaction(function () use ($query, $update, $newStatus, $statusIds, $data) {
+            $query->update($update + ['updated_at' => now()]);
+
+            if ($newStatus !== '' && $statusIds->isNotEmpty()) {
+                $comment = trim($data['status_comment'] ?? '') ?: "{$newStatus} in bulk from Settings";
+                foreach ($statusIds->chunk(500) as $chunk) {
+                    Comment::insert($chunk->map(fn ($id) => [
+                        'user_id' => $id,
+                        'user_id_comment_by' => auth()->id(),
+                        'comments' => $comment,
+                        'status' => $newStatus,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ])->all());
+                }
+            }
+        });
 
         return redirect()->route('settings.batch-exam.index', $request->query())
             ->with('success', "Updated {$count} candidate(s).");

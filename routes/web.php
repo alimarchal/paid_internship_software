@@ -308,6 +308,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         Route::post('batches', [\App\Http\Controllers\BatchController::class, 'store'])->name('batches.store');
         Route::put('batches/registration', [\App\Http\Controllers\BatchController::class, 'registration'])->name('batches.registration');
         Route::delete('batches/{batch}', [\App\Http\Controllers\BatchController::class, 'destroy'])->name('batches.destroy');
+        Route::get('candidates/add', [\App\Http\Controllers\CandidateEntryController::class, 'create'])->name('candidates.create');
+        Route::post('candidates/add', [\App\Http\Controllers\CandidateEntryController::class, 'store'])->name('candidates.store');
+        Route::get('candidates/added', [\App\Http\Controllers\CandidateEntryController::class, 'created'])->name('candidates.created');
+        Route::middleware('role:Super-Admin')->group(function () {
+            Route::resource('users', \App\Http\Controllers\SettingsUserController::class)->except(['show', 'destroy']);
+        });
         Route::post('batch-exam', [\App\Http\Controllers\BatchExamController::class, 'apply'])->name('batch-exam.apply');
     });
 });

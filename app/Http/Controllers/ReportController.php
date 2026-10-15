@@ -26,8 +26,9 @@ class ReportController extends Controller
                 ->whereNotNull('test_center')
                 ->where('profile_status', 1)
                 ->where('status', 'Shortlisted')
-                ->whereIn('district_of_domicile', ['Sudhanoti', 'Haveli', 'Bagh', 'Poonch'])
-                ->whereNotIn('id',[1965, 1756])
+                ->where('test_date','2024-12-21')
+                // ->whereIn('district_of_domicile', ['Sudhanoti', 'Haveli', 'Bagh', 'Poonch'])
+                // ->whereNotIn('id',[1965, 1756])
                 ->get();
 
             return view('candidate.call-letters', compact('cdt'));

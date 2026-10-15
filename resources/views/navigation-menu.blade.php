@@ -25,9 +25,9 @@
                                 {{ __('Call Letters') }}
                             </x-nav-link>
 
-                            <!--<x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">-->
-                            <!--    {{ __('Result') }}-->
-                            <!--</x-nav-link>-->
+                            <x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
+                                {{ __('Result') }}
+                            </x-nav-link>
                         @endif
                     @endif
 
@@ -47,9 +47,9 @@
                         </x-nav-link>
                     
                     
-                     <x-nav-link href="{{ route('report.result_batch_two') }}" :active="request()->routeIs('report.result_batch_two')">
-                        Result Batch-02 
-                    </x-nav-link>
+                         <x-nav-link href="{{ route('report.result_batch_two') }}" :active="request()->routeIs('report.result_batch_two')">
+                            Result Batch-02 
+                        </x-nav-link>
                     
                     
                     <!--  <x-nav-link href="{{ route('report.result_batch_two_kotli') }}" :active="request()->routeIs('report.result_batch_two_kotli')">-->
@@ -192,9 +192,9 @@
                         {{ __('Call Letters') }}
                     </x-responsive-nav-link>
 
-                    <!--<x-responsive-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">-->
-                    <!--    {{ __('Result') }}-->
-                    <!--</x-responsive-nav-link>-->
+                    <x-responsive-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
+                        {{ __('Result') }}
+                    </x-responsive-nav-link>
                 @endif
             @endif
         </div>

@@ -231,10 +231,10 @@
                                         @if(Auth::user()->email == "hrd@bankajk.com")
                                             <!--<a href="{{ route('candidate-user.password-change',$candidate->id) }}">-->
                                             {{ ucwords(strtolower($candidate->name)) }}
-                                             <!--<br>-->
+                                             <br>
                                             
                                             <!--</a>-->
-                                            <!--{{ $candidate->email }}-->
+                                            {{ $candidate->email }}
                                         @else
                                             <!--<a href="{{ route('candidate-user.password-change',$candidate->id) }}">-->
                                             {{ ucwords(strtolower($candidate->name)) }}

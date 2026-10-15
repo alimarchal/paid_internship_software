@@ -18,11 +18,11 @@ class ReportController extends Controller
 
         if ($user->hasRole(['admin', 'Super-Admin'])) {
             $cdt = QueryBuilder::for(User::class)
-                ->allowedFilters([
+                ->allowedFilters(
                     AllowedFilter::exact('batch_no'),
                     AllowedFilter::exact('status'),
                     AllowedFilter::exact('district_of_domicile'),
-                ])
+                )
                 ->whereNotNull('test_center')
                 ->where('profile_status', 1)
                 ->where('status', 'Shortlisted')

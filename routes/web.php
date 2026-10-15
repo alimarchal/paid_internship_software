@@ -26,35 +26,38 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
+    // Artisan::call('optimize:clear');
     return to_route('login');
 }); 
  
  
 // Route::get('/shortlisted', function () {
+//     // $users = User::where('id',1)
 //      $users = User::where('profile_status',1)
 //                 ->where('batch_no','Batch-02')
-//                 ->whereNotNull('test_center')
-//                 ->whereIn('district_of_domicile', ['Sudhanoti', 'Haveli', 'Bagh', 'Poonch'])
-//                 ->where('status','Shortlisted')
-//                 ->whereNotIn('id',[1965, 1756])
-//                 // ->take(1)
+//                 ->where('test_date','2024-12-21')
+//                 // ->whereNotNull('start_test_time')
+// //                 // ->whereIn('district_of_domicile', ['Sudhanoti', 'Haveli', 'Bagh', 'Poonch'])
+// //                 // ->where('status','Shortlisted')
+// //                 // ->whereNotIn('id',[1965, 1756])
+// //                 // ->take(1)
 //                 ->get();
+// //                 // dd($users);
                 
-                
-//                  $usersample = User::find(1);
+// // //                  $usersample = User::find(1);
 
-//         // Mail::to($user->email)->later(now()->addSeconds(20), new \App\Mail\ShortListed());
-//          \App\Jobs\SendShortListedJob::dispatch($usersample)->delay(now()->addSeconds(10));
+// // //         // Mail::to($user->email)->later(now()->addSeconds(20), new \App\Mail\ShortListed());
+// // //          \App\Jobs\SendShortListedJob::dispatch($usersample)->delay(now()->addSeconds(10));
 //     //  dd($users);
 //      foreach ($users as $user)
 //      {
 
-//         // Mail::to($user->email)->later(now()->addSeconds(20), new \App\Mail\ShortListed());
-//          \App\Jobs\SendShortListedJob::dispatch($user)->delay(now()->addSeconds(2));
+// // //         // Mail::to($user->email)->later(now()->addSeconds(20), new \App\Mail\ShortListed());
+// //          \App\Jobs\SendShortListedJob::dispatch($user)->delay(now()->addSeconds(5));
 
 
-//         // \App\Jobs\ResultAnnounced::dispatch($user)->delay(now()->addSeconds(10));
-//         // send(new \App\Mail\ShortListed());
+//         \App\Jobs\ResultAnnounced::dispatch($user)->delay(now()->addSeconds(2));
+// // //         // send(new \App\Mail\ShortListed());
 //      }
 
 //      echo "Mail Send";

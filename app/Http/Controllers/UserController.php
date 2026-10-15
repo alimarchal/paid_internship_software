@@ -20,7 +20,7 @@ class UserController extends Controller
 
         if ($role_name == "admin" || $role_name == "Super-Admin") {
             $candidates = QueryBuilder::for(User::class)
-                ->allowedFilters([
+                ->allowedFilters(
                     'name',
                     'fathers_name',
                     'email',
@@ -36,7 +36,7 @@ class UserController extends Controller
                     AllowedFilter::exact('status'),
                     AllowedFilter::exact('contact_number'),
                     AllowedFilter::exact('education_degrees_search.major_subject'),
-                ])
+                )
                 ->where('id', '>', 3)
                 ->with('education_degrees', 'education_degrees_search','latestStatus')
                 ->paginate(15)->withQueryString();
@@ -45,7 +45,7 @@ class UserController extends Controller
         }
         else {
             $candidates = QueryBuilder::for(User::class)->with('education_degrees')
-                ->allowedFilters([
+                ->allowedFilters(
                     'name',
                     'fathers_name',
                     'email',
@@ -57,7 +57,7 @@ class UserController extends Controller
                     AllowedFilter::exact('cnic_number'),
                     AllowedFilter::exact('profile_status'),
                     AllowedFilter::exact('contact_number'),
-                ])
+                )
                 ->where('id', \Auth::user()->id)
                 ->paginate(15)->withQueryString();
 

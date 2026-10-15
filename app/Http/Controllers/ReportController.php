@@ -18,16 +18,17 @@ class ReportController extends Controller
 
         if ($user->hasRole(['admin', 'Super-Admin'])) {
             $cdt = QueryBuilder::for(User::class)
-                ->allowedFilters([
+                ->allowedFilters(
                     AllowedFilter::exact('batch_no'),
                     AllowedFilter::exact('status'),
                     AllowedFilter::exact('district_of_domicile'),
-                ])
+                )
                 ->whereNotNull('test_center')
                 ->where('profile_status', 1)
                 ->where('status', 'Shortlisted')
-                ->whereIn('district_of_domicile', ['Sudhanoti', 'Haveli', 'Bagh', 'Poonch'])
-                ->whereNotIn('id',[1965, 1756])
+                ->where('test_date','2024-12-21')
+                // ->whereIn('district_of_domicile', ['Sudhanoti', 'Haveli', 'Bagh', 'Poonch'])
+                // ->whereNotIn('id',[1965, 1756])
                 ->get();
 
             return view('candidate.call-letters', compact('cdt'));

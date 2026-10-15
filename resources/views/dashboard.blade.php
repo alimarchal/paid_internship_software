@@ -218,12 +218,21 @@
                         <x-validation-errors class="ml-4 mt-4"/>
                         You have successfully submitted your application to HRMD of The Bank of Azad Jammu & Kashmir. <br>
                         Your Application No is: {{ $user->id }}<br>
+                        
+            
+                        
                         {{--                        Status: @if(!empty($user->latestStatus)) <span class="text-red-600">{{ $user->latestStatus->status }}</span> @endif--}}
 
 
                         <br>
-                        @if($user->profile_status == 1 && $user->status == "Shortlisted" & $user->exam_taken == 0 && !empty(Auth::user()->test_center))
-                            <a href="{{ route('report.call-letters') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Download Your Roll No Slip</a> <br>
+                        @if($user->profile_status == 1 && $user->status == "Shortlisted" && !empty(Auth::user()->test_center))
+                            <!--<a href="{{ route('report.call-letters') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Download Your Roll No Slip</a> <br>-->
+                            <!--<br>-->
+                            
+                                <a href="{{ route('report.result') }}" class="text-red-600 font-extrabold hover:underline text-2xl">Result</a> <br>
+                                <br>
+
+                            
                             @php
                                 $now = now();
                                 $startTime = Carbon\Carbon::parse($user->start_test_time);

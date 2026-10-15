@@ -4,14 +4,14 @@
   "workspaces": {
     "": {
       "devDependencies": {
-        "@tailwindcss/forms": "^0.5.11",
-        "@tailwindcss/typography": "^0.5.20",
-        "autoprefixer": "^10.6.1",
-        "axios": "^1.20.0",
-        "laravel-vite-plugin": "^0.8.1",
-        "postcss": "^8.5.30",
-        "tailwindcss": "^3.4.19",
-        "vite": "^4.5.14",
+        "@tailwindcss/forms": "^0.5.2",
+        "@tailwindcss/typography": "^0.5.0",
+        "autoprefixer": "^10.4.7",
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.8.0",
+        "postcss": "^8.4.14",
+        "tailwindcss": "^3.1.0",
+        "vite": "^4.0.0",
       },
     },
   },

@@ -45,7 +45,7 @@ class RandomUserQuestionController extends Controller
 
             if (!$allocatedQuestionsExist) {
                 try {
-                    DB::transaction(function () use ($user_id) {
+                    DB::transaction(function () use ($user_id, $user) {
 //                        // Fetch all questions
 //                        $allQuestions = Question::all();
 //
@@ -70,24 +70,14 @@ class RandomUserQuestionController extends Controller
 //                            }
 //                        }
 
-                        // Fetch questions by category with the specified amounts
-                        $english_questions = Question::where('category_id', 4)->inRandomOrder()->take(10)->get();
-                        $general_knowledge_questions = Question::where('category_id', 7)->inRandomOrder()->take(10)->get();
-                        // Assuming 'other' categories mean every category except for English and General Knowledge
-                        $other_questions = Question::whereNotIn('category_id', [4, 7, 14])->inRandomOrder()->take(80)->get();
-
-                        // Merge the collections into one
-                        $randomQuestions = $english_questions->merge($general_knowledge_questions)->merge($other_questions);
-
-                        // Optional: If you want the final collection to be shuffled
-                        $randomQuestions = $randomQuestions->shuffle();
-
+                        // Paper size and category split come from the candidate's exam_config (set in Settings > Batch Exam)
+                        $questionIds = app(\App\Services\ExamPaperBuilder::class)->questionIds($user->exam_config);
 
                         // Store the randomly selected questions for this user
-                        foreach ($randomQuestions as $question) {
+                        foreach ($questionIds as $questionId) {
                             RandomUserQuestion::create([
                                 'user_id' => $user_id,
-                                'question_id' => $question->id,
+                                'question_id' => $questionId,
                             ]);
                         }
                     });

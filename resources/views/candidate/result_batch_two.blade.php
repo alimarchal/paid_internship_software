@@ -78,7 +78,7 @@
     @endpush
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight inline-block">
-                {{ __('Result Batch-02') }}
+                {{ __('Result') }} {{ $batch }}
             </h2>
 
             <div class="flex justify-center items-center float-right">
@@ -169,7 +169,7 @@
                                             E-Mail: hrd@bankajk.com
                                         </p>
                                         <p class="text-center font-extrabold capitalize underline " style="font-size: 14px;">
-                                            Paid Internship Portal Result (Batch-02)
+                                            Paid Internship Portal Result ({{ $batch }})
                                         </p>
                                     </td>
                                     <td style="width: 20%; text-align: center;border: none;">

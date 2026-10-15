@@ -70,6 +70,36 @@ class ReportController extends Controller
     
     public function result_batch_two(Request $request)
     {
+        return $this->batchResult($request, 'Batch-02');
+    }
+
+    /** Result landing page: one card per batch. */
+    public function resultHub()
+    {
+        $email = Auth::user()->email;
+        abort_unless(in_array($email, ['dh_hrd@bankajk.com', 'hrd@bankajk.com']), 403);
+
+        $stats = User::role('Intern')
+            ->selectRaw('batch_no, count(*) as registered, sum(profile_status = 1) as submitted, sum(status = \'Shortlisted\') as shortlisted, sum(exam_taken = 1) as finished')
+            ->groupBy('batch_no')
+            ->get()
+            ->keyBy('batch_no');
+
+        return view('candidate.result_hub', [
+            'batches' => \App\Models\Batch::orderBy('name')->get(),
+            'stats' => $stats,
+        ]);
+    }
+
+    public function resultForBatch(Request $request, string $batch)
+    {
+        abort_unless(\App\Models\Batch::where('name', $batch)->exists(), 404);
+
+        return $this->batchResult($request, $batch);
+    }
+
+    private function batchResult(Request $request, string $batch)
+    {
         $user = Auth::user();
         if ($user->email == "dh_hrd@bankajk.com" || $user->email == "hrd@bankajk.com") {
             $district_of_domicile = ['Muzaffarabad', 'Jhelum Valley', 'Neelum', 'Refugee'];
@@ -95,7 +125,7 @@ class ReportController extends Controller
 //            dd($district_of_domicile);
 
             $users = User::where('profile_status', 1)->where('status', 'Shortlisted')
-            ->where('batch_no','Batch-02')
+            ->where('batch_no', $batch)
 //            ->where('test_date','2024-11-24')
             ->whereIn('district_of_domicile',$district_of_domicile)
 //            ->whereIn('district_of_domicile',['Bagh','Poonch','Sudhanoti','Haveli'])
@@ -114,7 +144,7 @@ class ReportController extends Controller
                 ->orderByDesc('correct_answer')
                 ->get();
 
-            return view('candidate.result_batch_two', compact('users', 'results'));
+            return view('candidate.result_batch_two', compact('users', 'results', 'batch'));
         }
         elseif ($user->hasRole('Intern')) {
             $cdt = User::where('profile_status', 1)->where('id', $user->id)->where('status', 'Shortlisted')->get();
@@ -124,7 +154,7 @@ class ReportController extends Controller
                 ->groupBy('user_id')
                 ->orderByDesc('correct_answer')
                 ->get();
-            return view('candidate.result_batch_two', compact('cdt','user','results'));
+            return view('candidate.result_batch_two', compact('cdt','user','results', 'batch'));
         }
     }
     

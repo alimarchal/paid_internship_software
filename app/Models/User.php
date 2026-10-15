@@ -83,6 +83,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_status',
         'batch_no',
         'status',
+        'exam_config',
     ];
 
     /**
@@ -104,6 +105,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'exam_config' => 'array',
     ];
 
     /**

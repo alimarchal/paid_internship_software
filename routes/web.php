@@ -288,6 +288,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('reports/call-letters', [\App\Http\Controllers\ReportController::class, 'callLetters'])->name('report.call-letters');
     Route::get('reports/result', [\App\Http\Controllers\ReportController::class, 'result'])->name('report.result');
     Route::get('reports/result_batch_two', [\App\Http\Controllers\ReportController::class, 'result_batch_two'])->name('report.result_batch_two');
+    Route::get('reports/results', [\App\Http\Controllers\ReportController::class, 'resultHub'])->name('report.results');
+    Route::get('reports/result-batch/{batch}', [\App\Http\Controllers\ReportController::class, 'resultForBatch'])->name('report.result_batch');
     Route::get('reports/result_batch_two_kotli', [\App\Http\Controllers\ReportController::class, 'result_batch_two_kotli'])->name('report.result_batch_two_kotli');
 
     Route::post('shortlisted/submit/{user}', [\App\Http\Controllers\UserController::class, 'shortlisted'])->name('candidate.shortlisted');
@@ -297,4 +299,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('start-session', [\App\Http\Controllers\RandomUserQuestionController::class, 'index'])->name('start_session');
     Route::post('save-answer', [\App\Http\Controllers\RandomUserQuestionController::class, 'store'])->name('save-answer');
     Route::post('finish-exam', [\App\Http\Controllers\RandomUserQuestionController::class, 'finishExam'])->name('finish-exam');
+    Route::middleware('role:admin|Super-Admin')->prefix('settings')->name('settings.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\SettingsController::class, 'index'])->name('index');
+        Route::resource('categories', \App\Http\Controllers\CategoryController::class)->except('show');
+        Route::resource('questions', \App\Http\Controllers\QuestionController::class);
+        Route::get('batch-exam', [\App\Http\Controllers\BatchExamController::class, 'index'])->name('batch-exam.index');
+        Route::get('batches', [\App\Http\Controllers\BatchController::class, 'index'])->name('batches.index');
+        Route::post('batches', [\App\Http\Controllers\BatchController::class, 'store'])->name('batches.store');
+        Route::put('batches/registration', [\App\Http\Controllers\BatchController::class, 'registration'])->name('batches.registration');
+        Route::delete('batches/{batch}', [\App\Http\Controllers\BatchController::class, 'destroy'])->name('batches.destroy');
+        Route::post('batch-exam', [\App\Http\Controllers\BatchExamController::class, 'apply'])->name('batch-exam.apply');
+    });
 });

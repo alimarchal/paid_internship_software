@@ -41,21 +41,15 @@
                     </x-nav-link>
 
 
-                    @if(Auth::user()->email == "dh_hrd@bankajk.com")
-                        <x-nav-link href="{{ route('report.result') }}" :active="request()->routeIs('report.result')">
-                           Result Batch-01
+                    @if(in_array(Auth::user()->email, ['dh_hrd@bankajk.com', 'hrd@bankajk.com']))
+                        <x-nav-link href="{{ route('report.results') }}" :active="request()->routeIs('report.results') || request()->routeIs('report.result*')">
+                            {{ __('Result') }}
                         </x-nav-link>
-                    
-                    
-                         <x-nav-link href="{{ route('report.result_batch_two') }}" :active="request()->routeIs('report.result_batch_two')">
-                            Result Batch-02 
-                        </x-nav-link>
-                    
-                    
-                    <!--  <x-nav-link href="{{ route('report.result_batch_two_kotli') }}" :active="request()->routeIs('report.result_batch_two_kotli')">-->
-                    <!--    Result Batch-02 (Kotli)-->
-                    <!--</x-nav-link>-->
                     @endif
+
+                    <x-nav-link href="{{ route('settings.index') }}" :active="request()->routeIs('settings.*')">
+                        {{ __('Settings') }}
+                    </x-nav-link>
                     @endrole
                 </div>
             </div>

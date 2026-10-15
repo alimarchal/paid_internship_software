@@ -6,7 +6,6 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use Carbon\Carbon;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -29,14 +28,12 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $deadline = Carbon::create(2026, 10, 16, 23, 59, 59);
-        $now = Carbon::now();
+        // Registration page: open until the deadline kept in Settings > Batches & Registration.
+        Fortify::registerView(function () {
+            abort_unless(\App\Models\Setting::registrationOpen(), 403, 'Registration is closed.');
 
-        if ($now->greaterThan($deadline)) {
-            Fortify::registerView(function () {
-                return abort(403, 'Registration is closed.'); // Or return a custom view
-            });
-        }
+            return view('auth.register');
+        });
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

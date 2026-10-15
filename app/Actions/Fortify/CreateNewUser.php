@@ -21,6 +21,8 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        abort_unless(\App\Models\Setting::registrationOpen(), 403, 'Registration is closed.');
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'degree_level' => ['required'],
@@ -51,7 +53,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'date_of_birth' => $input['date_of_birth'],
             'password' => Hash::make($input['password']),
-            'batch_no' => 'Batch-03',
+            'batch_no' => \App\Models\Batch::registrationName(),
         ]);
 
         $role = Role::find(1);

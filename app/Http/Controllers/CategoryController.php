@@ -2,65 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $categories = Category::withCount('questions')->orderBy('name')->get();
+
+        return view('settings.categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('settings.categories.form', ['category' => new Category()]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCategoryRequest $request)
+    public function store(Request $request)
     {
-        //
+        Category::create($this->validated($request));
+
+        return to_route('settings.categories.index')->with('success', 'Category added.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Category $category)
     {
-        //
+        return view('settings.categories.form', compact('category'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(Request $request, Category $category)
     {
-        //
+        $category->update($this->validated($request));
+
+        return to_route('settings.categories.index')->with('success', 'Category updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Category $category)
     {
-        //
+        if ($category->questions()->exists()) {
+            return back()->with('error', 'This category has questions, so it cannot be deleted.');
+        }
+
+        $category->delete();
+
+        return to_route('settings.categories.index')->with('success', 'Category deleted.');
+    }
+
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:2000'],
+        ]);
     }
 }

@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('random_user_questions')) {
+            return;
+        }
+
         Schema::create('random_user_questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained();

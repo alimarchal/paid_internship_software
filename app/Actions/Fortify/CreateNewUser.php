@@ -51,7 +51,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'date_of_birth' => $input['date_of_birth'],
             'password' => Hash::make($input['password']),
-            'batch_no' => 'Batch-02',
+            'batch_no' => 'Batch-03',
         ]);
 
         $role = Role::find(1);

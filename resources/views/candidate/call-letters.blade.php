@@ -118,6 +118,7 @@
                                 <option value="">Select a Batch No</option>
                                 <option value="Batch-01">Batch-01</option>
                                 <option value="Batch-02">Batch-02</option>
+                                <option value="Batch-03">Batch-03</option>
                             </select>
                         </div>
 

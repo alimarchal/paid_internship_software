@@ -127,7 +127,13 @@ class ReportController extends Controller
             $users = User::where('profile_status', 1)->where('status', 'Shortlisted')
             ->where('batch_no', $batch)
 //            ->where('test_date','2024-11-24')
-            ->whereIn('district_of_domicile',$district_of_domicile)
+            ->where(function ($query) use ($batch, $request, $district_of_domicile) {
+                $query->whereIn('district_of_domicile', $district_of_domicile);
+
+                if ($batch === 'Batch-IBS-01' && empty($request->filter['region'])) {
+                    $query->orWhereNull('district_of_domicile');
+                }
+            })
 //            ->whereIn('district_of_domicile',['Bagh','Poonch','Sudhanoti','Haveli'])
 //            ->whereNotIn('district_of_domicile',['Jhelum Valley','Muzaffarabad'])
 //            ->whereIn('id',[808,869,897,928,946,983,994,1008,1017,1024,1034,1073,1093,1127,1137,1138,1149,1161,1162,1194,1199,1200,1230,1269,1332,1352,1356,1363,1365,1389,1402,1438,1439,1462,1488,1508,1528,1541,1582,1584,1585,1650,1668,1674,1678,1685,1690,1697,1705,1711,1712,1723,1726,1729,1761,1789,1802,1823,1848,1855,1863,1881,1888,1891,1909,1912,1913,1926,1950,1958,1987,2058,2102])
